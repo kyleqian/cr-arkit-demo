@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4911618096222996}
   - component: {fileID: 114231419395794690}
   m_Layer: 0
-  m_Name: HitTestManager
+  m_Name: ARHitTestManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -53,6 +53,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HitTransform: {fileID: 0}
   maxRayDistance: 30
+  rotationSpeed: 100
   collisionLayer:
     serializedVersion: 2
     m_Bits: 1024
