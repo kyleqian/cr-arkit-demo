@@ -51,9 +51,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6941ec02ead994c9b848d640887441f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_HitTransform: {fileID: 0}
+  HitTestModelPrefab: {fileID: 1653022574939592, guid: 6980b96dbb7a3471d857f77a744884a1,
+    type: 2}
   maxRayDistance: 30
   rotationSpeed: 100
+  scalingSpeed: 0.5
   collisionLayer:
     serializedVersion: 2
     m_Bits: 1024
+  messageText: {fileID: 0}

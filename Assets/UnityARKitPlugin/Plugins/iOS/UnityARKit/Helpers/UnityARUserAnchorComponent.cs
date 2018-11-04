@@ -16,7 +16,7 @@ public class UnityARUserAnchorComponent : MonoBehaviour {
 	{
 		UnityARSessionNativeInterface.ARUserAnchorUpdatedEvent += GameObjectAnchorUpdated;
 		UnityARSessionNativeInterface.ARUserAnchorRemovedEvent += AnchorRemoved;
-		this.m_AnchorId = UnityARSessionNativeInterface.GetARSessionNativeInterface ().AddUserAnchorFromGameObject(this.gameObject).identifierStr; 
+            this.m_AnchorId = UnityARSessionNativeInterface.GetARSessionNativeInterface ().AddUserAnchorFromGameObject(this.gameObject).identifierStr; 
 	}
 	void Start () {
 

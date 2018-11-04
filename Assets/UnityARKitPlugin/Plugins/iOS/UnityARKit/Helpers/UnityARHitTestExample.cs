@@ -3,19 +3,64 @@ using System.Collections.Generic;
 
 namespace UnityEngine.XR.iOS
 {
-    
-	public class UnityARHitTestExample : MonoBehaviour
+    public class UnityARHitTestExample : MonoBehaviour
     {
+        public static UnityARHitTestExample Instance;
+
+        struct SimpleModelTransform
+        {
+            public Vector3 position;
+            public Quaternion rotation;
+            public Vector3 localScale;
+        }
+
         enum RotationState { None, CW, CCW }
         enum ScalingState { None, Up, Down }
 
-        public Transform m_HitTransform;
+        public GameObject HitTestModelPrefab;
         public float maxRayDistance;
         public float rotationSpeed;
+        public float scalingSpeed;
         public LayerMask collisionLayer; // ARKitPlane layer
 
+        const string PlayerPrefAnchorIdKey = "AnchorId";
+        const string PlayerPrefScaleXKey = "ScaleX";
+        const string PlayerPrefScaleYKey = "ScaleY";
+        const string PlayerPrefScaleZKey = "ScaleZ";
+        SimpleModelTransform originalModelTransform;
         RotationState rotationState = RotationState.None;
         ScalingState scalingState = ScalingState.None;
+
+        string anchorId = "";
+        GameObject hitTestModelInst;
+
+        public void RecordModelScale()
+        {
+            if (!hitTestModelInst.activeSelf)
+            {
+                return;
+            }
+            PlayerPrefs.SetFloat(PlayerPrefScaleXKey, hitTestModelInst.transform.localScale.x);
+            PlayerPrefs.SetFloat(PlayerPrefScaleYKey, hitTestModelInst.transform.localScale.y);
+            PlayerPrefs.SetFloat(PlayerPrefScaleZKey, hitTestModelInst.transform.localScale.z);
+        }
+
+        public void LoadModelScale()
+        {
+            if (!PlayerPrefs.HasKey(PlayerPrefScaleXKey) || !PlayerPrefs.HasKey(PlayerPrefScaleYKey) || !PlayerPrefs.HasKey(PlayerPrefScaleZKey))
+            {
+                return;
+            }
+            hitTestModelInst.transform.localScale = new Vector3(PlayerPrefs.GetFloat(PlayerPrefScaleXKey), PlayerPrefs.GetFloat(PlayerPrefScaleYKey), PlayerPrefs.GetFloat(PlayerPrefScaleZKey));
+        }
+
+        public void ResetModel()
+        {
+            hitTestModelInst.SetActive(false);
+            //m_HitTransform.position = originalModelTransform.position;
+            //m_HitTransform.rotation = originalModelTransform.rotation;
+            //m_HitTransform.localScale = originalModelTransform.localScale;
+        }
 
         public void StartCWRotation()
         {
@@ -49,12 +94,17 @@ namespace UnityEngine.XR.iOS
 
         void RotateModel(bool clockwise)
         {
-            m_HitTransform.Rotate((clockwise ? 1 : -1) * rotationSpeed * Vector3.up * Time.deltaTime);
+            hitTestModelInst.transform.Rotate((clockwise ? 1 : -1) * rotationSpeed * Vector3.up * Time.deltaTime);
         }
 
         void ScaleModel(bool scaleUp)
         {
-            m_HitTransform.localScale = m_HitTransform.localScale + ((scaleUp ? 1 : -1) * Vector3.one * Time.deltaTime);
+            Vector3 newScale = hitTestModelInst.transform.localScale + ((scaleUp ? 1 : -1) * scalingSpeed * Vector3.one * Time.deltaTime);
+            if (newScale.x < 0 || newScale.y < 0 || newScale.z < 0)
+            {
+                return;
+            }
+            hitTestModelInst.transform.localScale = newScale;
         }
 
         bool IsPointerOverUIObject()
@@ -66,42 +116,104 @@ namespace UnityEngine.XR.iOS
             return results.Count > 0;
         }
 
-        bool HitTestWithResultType (ARPoint point, ARHitTestResultType resultTypes)
+        bool HitTestWithResultType(ARPoint point, ARHitTestResultType resultTypes)
         {
-            List<ARHitTestResult> hitResults = UnityARSessionNativeInterface.GetARSessionNativeInterface ().HitTest (point, resultTypes);
-            if (hitResults.Count > 0) {
-                foreach (var hitResult in hitResults) {
-                    Debug.Log ("Got hit!");
-                    m_HitTransform.position = UnityARMatrixOps.GetPosition (hitResult.worldTransform);
-                    //m_HitTransform.rotation = UnityARMatrixOps.GetRotation (hitResult.worldTransform);
-                    m_HitTransform.gameObject.SetActive(true);
-                    Debug.Log (string.Format ("x:{0:0.######} y:{1:0.######} z:{2:0.######}", m_HitTransform.position.x, m_HitTransform.position.y, m_HitTransform.position.z));
+            List<ARHitTestResult> hitResults = UnityARSessionNativeInterface.GetARSessionNativeInterface().HitTest(point, resultTypes);
+            if (hitResults.Count > 0)
+            {
+                foreach (var hitResult in hitResults)
+                {
+                    if (anchorId != "")
+                    {
+                        UnityARSessionNativeInterface.GetARSessionNativeInterface().RemoveUserAnchor(anchorId);
+                        PlayerPrefs.DeleteKey(PlayerPrefAnchorIdKey);
+                        anchorId = "";
+                    }
+                    hitTestModelInst.transform.position = UnityARMatrixOps.GetPosition(hitResult.worldTransform);
+                    hitTestModelInst.transform.rotation = UnityARMatrixOps.GetRotation(hitResult.worldTransform);
+                    hitTestModelInst.SetActive(true);
+                    anchorId = UnityARSessionNativeInterface.GetARSessionNativeInterface().AddUserAnchorFromGameObject(hitTestModelInst).identifierStr;
+                    PlayerPrefs.SetString(PlayerPrefAnchorIdKey, anchorId);
                     return true;
                 }
             }
             return false;
         }
 
-        void Update ()
+        void UnityARSessionNativeInterface_ARUserAnchorAddedEvent(ARUserAnchor anchorData)
         {
-			#if UNITY_EDITOR //we will only use this script on the editor side, though there is nothing that would prevent it from working on device
-			if (Input.GetMouseButtonDown (0)) {
-				Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-				RaycastHit hit;
-				
-				//we'll try to hit one of the plane collider gameobjects that were generated by the plugin
-				//effectively similar to calling HitTest with ARHitTestResultType.ARHitTestResultTypeExistingPlaneUsingExtent
-				if (Physics.Raycast (ray, out hit, maxRayDistance, collisionLayer)) {
-					//we're going to get the position from the contact point
-					m_HitTransform.position = hit.point;
-					Debug.Log (string.Format ("x:{0:0.######} y:{1:0.######} z:{2:0.######}", m_HitTransform.position.x, m_HitTransform.position.y, m_HitTransform.position.z));
+            if (anchorData.identifier != anchorId)
+            {
+                return;
+            }
+            hitTestModelInst.transform.position = UnityARMatrixOps.GetPosition(anchorData.transform);
+            hitTestModelInst.transform.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
+            hitTestModelInst.SetActive(true);
 
-					//and the rotation from the transform of the plane collider
-					m_HitTransform.rotation = hit.transform.rotation;
-				}
-			}
-			#else
-            if (Input.touchCount > 0 && !IsPointerOverUIObject() && m_HitTransform != null)
+            Debug.Log("Added anchor: " + hitTestModelInst.transform.position.ToString("F2"));
+        }
+
+        void UnityARSessionNativeInterface_ARUserAnchorUpdatedEvent(ARUserAnchor anchorData)
+        {
+            if (anchorData.identifier != anchorId)
+            {
+                return;
+            }
+            hitTestModelInst.transform.position = UnityARMatrixOps.GetPosition(anchorData.transform);
+            hitTestModelInst.transform.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
+
+            Debug.Log("Updated anchor: " + hitTestModelInst.transform.position.ToString("F2"));
+        }
+
+        void UnityARSessionNativeInterface_ARUserAnchorRemovedEvent(ARUserAnchor anchorData)
+        {
+            if (anchorData.identifier != anchorId)
+            {
+                return;
+            }
+            hitTestModelInst.SetActive(false);
+
+            Debug.Log("Removed anchor: " + hitTestModelInst.transform.position.ToString("F2"));
+        }
+
+        void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            hitTestModelInst = Instantiate(HitTestModelPrefab);
+            hitTestModelInst.SetActive(false);
+            if (PlayerPrefs.HasKey(PlayerPrefAnchorIdKey))
+            {
+                anchorId = PlayerPrefs.GetString(PlayerPrefAnchorIdKey);
+            }
+            originalModelTransform = new SimpleModelTransform
+            {
+                position = hitTestModelInst.transform.position,
+                rotation = hitTestModelInst.transform.rotation,
+                localScale = hitTestModelInst.transform.localScale
+            };
+            UnityARSessionNativeInterface.ARUserAnchorAddedEvent += UnityARSessionNativeInterface_ARUserAnchorAddedEvent;
+            UnityARSessionNativeInterface.ARUserAnchorUpdatedEvent += UnityARSessionNativeInterface_ARUserAnchorUpdatedEvent;
+            UnityARSessionNativeInterface.ARUserAnchorRemovedEvent += UnityARSessionNativeInterface_ARUserAnchorRemovedEvent;
+        }
+
+        void OnDestroy()
+        {
+            if (Instance == this)
+            {
+                Instance = null;
+            }
+            Destroy(hitTestModelInst);
+            UnityARSessionNativeInterface.ARUserAnchorAddedEvent -= UnityARSessionNativeInterface_ARUserAnchorAddedEvent;
+            UnityARSessionNativeInterface.ARUserAnchorUpdatedEvent -= UnityARSessionNativeInterface_ARUserAnchorUpdatedEvent;
+            UnityARSessionNativeInterface.ARUserAnchorRemovedEvent -= UnityARSessionNativeInterface_ARUserAnchorRemovedEvent;
+        }
+
+        void Update()
+        {
+            if (Input.touchCount > 0 && !IsPointerOverUIObject())
 			{
 				var touch = Input.GetTouch(0);
 				if (touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Moved)
@@ -132,9 +244,9 @@ namespace UnityEngine.XR.iOS
                     }
 				}
 			}
-			#endif
 
-            switch (rotationState) {
+            switch (rotationState)
+            {
                 case RotationState.None:
                     break;
                 case RotationState.CW:
@@ -145,7 +257,8 @@ namespace UnityEngine.XR.iOS
                     break;
             }
 
-            switch (scalingState) {
+            switch (scalingState)
+            {
                 case ScalingState.None:
                     break;
                 case ScalingState.Up:
@@ -155,6 +268,6 @@ namespace UnityEngine.XR.iOS
                     ScaleModel(false);
                     break;
             }
-		}
-	}
+        }
+    }
 }

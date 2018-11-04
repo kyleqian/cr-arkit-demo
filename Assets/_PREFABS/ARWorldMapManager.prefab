@@ -52,3 +52,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ARCameraManager: {fileID: 0}
+  ReferenceImage: {fileID: 0}
+  TestModeToggle: {fileID: 0}
