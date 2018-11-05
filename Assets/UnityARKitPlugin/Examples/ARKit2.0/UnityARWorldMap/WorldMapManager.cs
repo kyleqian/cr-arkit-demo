@@ -38,8 +38,8 @@ public class WorldMapManager : MonoBehaviour
         if (arCamera.trackingReason != m_LastReason)
         {
             Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.None);
-            Debug.LogFormat("worldTransform: {0}", arCamera.worldTransform.column3);
-            Debug.LogFormat("trackingState: {0} {1}", arCamera.trackingState, arCamera.trackingReason);
+            //Debug.LogFormat("worldTransform: {0}", arCamera.worldTransform.column3);
+            //Debug.LogFormat("trackingState: {0} {1}", arCamera.trackingState, arCamera.trackingReason);
             m_LastReason = arCamera.trackingReason;
         }
     }
@@ -94,9 +94,6 @@ public class WorldMapManager : MonoBehaviour
 
     public void Load()
     {
-        // TODO
-        UnityARHitTestExample.Instance.LoadModelScale();
-
 #if UNITY_EDITOR
         ReferenceImage.sprite = UtilitiesCR.LoadNewSprite(Application.dataPath + "/../" + ReferenceImageSaveName);
         ReferenceImage.color = new Color(1, 1, 1, 1);
@@ -124,7 +121,6 @@ public class WorldMapManager : MonoBehaviour
     public void ResetARSession()
     {
         UnityARHitTestExample.Instance.ResetModel();
-        //UnityARSessionNativeInterface.ARSessionShouldAttemptRelocalization = false;
         session.RunWithConfigAndOptions(m_ARCameraManager.sessionConfiguration, UnityARSessionRunOption.ARSessionRunOptionRemoveExistingAnchors | UnityARSessionRunOption.ARSessionRunOptionResetTracking);
     }
 }

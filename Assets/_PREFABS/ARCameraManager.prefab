@@ -55,7 +55,7 @@ MonoBehaviour:
   startAlignment: 0
   planeDetection: 3
   getPointCloud: 1
-  enableLightEstimation: 1
+  enableLightEstimation: 0
   enableAutoFocus: 1
   environmentTexturing: 0
   detectionImages: {fileID: 0}

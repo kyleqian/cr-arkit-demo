@@ -31,7 +31,6 @@ namespace UnityEngine.XR.iOS
         RotationState rotationState = RotationState.None;
         ScalingState scalingState = ScalingState.None;
 
-        string anchorId = "";
         GameObject hitTestModelInst;
 
         public void RecordModelScale()
@@ -43,15 +42,6 @@ namespace UnityEngine.XR.iOS
             PlayerPrefs.SetFloat(PlayerPrefScaleXKey, hitTestModelInst.transform.localScale.x);
             PlayerPrefs.SetFloat(PlayerPrefScaleYKey, hitTestModelInst.transform.localScale.y);
             PlayerPrefs.SetFloat(PlayerPrefScaleZKey, hitTestModelInst.transform.localScale.z);
-        }
-
-        public void LoadModelScale()
-        {
-            if (!PlayerPrefs.HasKey(PlayerPrefScaleXKey) || !PlayerPrefs.HasKey(PlayerPrefScaleYKey) || !PlayerPrefs.HasKey(PlayerPrefScaleZKey))
-            {
-                return;
-            }
-            hitTestModelInst.transform.localScale = new Vector3(PlayerPrefs.GetFloat(PlayerPrefScaleXKey), PlayerPrefs.GetFloat(PlayerPrefScaleYKey), PlayerPrefs.GetFloat(PlayerPrefScaleZKey));
         }
 
         public void ResetModel()
@@ -123,17 +113,15 @@ namespace UnityEngine.XR.iOS
             {
                 foreach (var hitResult in hitResults)
                 {
-                    if (anchorId != "")
+                    if (PlayerPrefs.HasKey(PlayerPrefAnchorIdKey))
                     {
-                        UnityARSessionNativeInterface.GetARSessionNativeInterface().RemoveUserAnchor(anchorId);
+                        UnityARSessionNativeInterface.GetARSessionNativeInterface().RemoveUserAnchor(PlayerPrefs.GetString(PlayerPrefAnchorIdKey));
                         PlayerPrefs.DeleteKey(PlayerPrefAnchorIdKey);
-                        anchorId = "";
                     }
                     hitTestModelInst.transform.position = UnityARMatrixOps.GetPosition(hitResult.worldTransform);
                     hitTestModelInst.transform.rotation = UnityARMatrixOps.GetRotation(hitResult.worldTransform);
                     hitTestModelInst.SetActive(true);
-                    anchorId = UnityARSessionNativeInterface.GetARSessionNativeInterface().AddUserAnchorFromGameObject(hitTestModelInst).identifierStr;
-                    PlayerPrefs.SetString(PlayerPrefAnchorIdKey, anchorId);
+                    PlayerPrefs.SetString(PlayerPrefAnchorIdKey, UnityARSessionNativeInterface.GetARSessionNativeInterface().AddUserAnchorFromGameObject(hitTestModelInst).identifierStr);
                     return true;
                 }
             }
@@ -142,35 +130,28 @@ namespace UnityEngine.XR.iOS
 
         void UnityARSessionNativeInterface_ARUserAnchorAddedEvent(ARUserAnchor anchorData)
         {
-            if (anchorData.identifier != anchorId)
-            {
-                return;
-            }
             hitTestModelInst.transform.position = UnityARMatrixOps.GetPosition(anchorData.transform);
             hitTestModelInst.transform.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
             hitTestModelInst.SetActive(true);
 
-            Debug.Log("Added anchor: " + hitTestModelInst.transform.position.ToString("F2"));
+            Debug.Log("Added anchor: " + anchorData.identifier + " " + hitTestModelInst.transform.position.ToString("F2"));
+
+            if (PlayerPrefs.HasKey(PlayerPrefScaleXKey) && PlayerPrefs.HasKey(PlayerPrefScaleYKey) && PlayerPrefs.HasKey(PlayerPrefScaleZKey))
+            {
+                hitTestModelInst.transform.localScale = new Vector3(PlayerPrefs.GetFloat(PlayerPrefScaleXKey), PlayerPrefs.GetFloat(PlayerPrefScaleYKey), PlayerPrefs.GetFloat(PlayerPrefScaleZKey));
+            }
         }
 
         void UnityARSessionNativeInterface_ARUserAnchorUpdatedEvent(ARUserAnchor anchorData)
         {
-            if (anchorData.identifier != anchorId)
-            {
-                return;
-            }
             hitTestModelInst.transform.position = UnityARMatrixOps.GetPosition(anchorData.transform);
             hitTestModelInst.transform.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
 
-            Debug.Log("Updated anchor: " + hitTestModelInst.transform.position.ToString("F2"));
+            Debug.Log("Updated anchor: " + anchorData.identifier + " " + hitTestModelInst.transform.position.ToString("F2"));
         }
 
         void UnityARSessionNativeInterface_ARUserAnchorRemovedEvent(ARUserAnchor anchorData)
         {
-            if (anchorData.identifier != anchorId)
-            {
-                return;
-            }
             hitTestModelInst.SetActive(false);
 
             Debug.Log("Removed anchor: " + hitTestModelInst.transform.position.ToString("F2"));
@@ -184,10 +165,6 @@ namespace UnityEngine.XR.iOS
             }
             hitTestModelInst = Instantiate(HitTestModelPrefab);
             hitTestModelInst.SetActive(false);
-            if (PlayerPrefs.HasKey(PlayerPrefAnchorIdKey))
-            {
-                anchorId = PlayerPrefs.GetString(PlayerPrefAnchorIdKey);
-            }
             originalModelTransform = new SimpleModelTransform
             {
                 position = hitTestModelInst.transform.position,
