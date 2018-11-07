@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -104,10 +105,33 @@ public class ARKitWorldMapManager : MonoBehaviour
         Session.RunWithConfigAndOptions(ARKitCameraManager.Instance.sessionConfiguration, UnityARSessionRunOption.ARSessionRunOptionRemoveExistingAnchors | UnityARSessionRunOption.ARSessionRunOptionResetTracking);
     }
 
+    // Adding an anchor to the ARSession happens across two frames, so in order
+    // to make sure `Session.GetCurrentWorldMapAsync` gets the map AFTER we add
+    // our new anchor, we must call it in the next frame.
     public void SaveWorldMap()
     {
+        StartCoroutine(SaveWorldMapCoroutine());
+    }
+
+    IEnumerator SaveWorldMapCoroutine()
+    {
         SaveModel();
+        yield return null;
         Session.GetCurrentWorldMapAsync(OnWorldMap);
+    }
+
+    void OnWorldMap(ARWorldMap worldMap)
+    {
+#if UNITY_EDITOR
+        ScreenCapture.CaptureScreenshot(ReferenceImageSaveName);
+#else
+        if (worldMap != null)
+        {
+            worldMap.Save(WorldMapSavePath);
+            ScreenCapture.CaptureScreenshot(ReferenceImageSaveName);
+            Debug.LogFormat("ARWorldMap saved to {0}", WorldMapSavePath);
+        }
+#endif
     }
 
     public void LoadWorldMap()
@@ -141,7 +165,7 @@ public class ARKitWorldMapManager : MonoBehaviour
         modelInstance.transform.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
         modelInstance.SetActive(true);
 
-        Debug.Log("Added anchor: " + anchorData.identifier + " " + modelInstance.transform.position.ToString("F2"));
+        Debug.LogFormat("Added anchor: {0} | {1}", anchorData.identifier, modelInstance.transform.position.ToString("F2"));
 
         if (PlayerPrefs.HasKey(PlayerPrefScaleXKey) && PlayerPrefs.HasKey(PlayerPrefScaleYKey) && PlayerPrefs.HasKey(PlayerPrefScaleZKey))
         {
@@ -154,28 +178,14 @@ public class ARKitWorldMapManager : MonoBehaviour
         modelInstance.transform.position = UnityARMatrixOps.GetPosition(anchorData.transform);
         modelInstance.transform.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
 
-        Debug.Log("Updated anchor: " + anchorData.identifier + " " + modelInstance.transform.position.ToString("F2"));
+        Debug.LogFormat("Updated anchor: {0} | {1}", anchorData.identifier, modelInstance.transform.position.ToString("F2"));
     }
 
     void UnityARSessionNativeInterface_ARUserAnchorRemovedEvent(ARUserAnchor anchorData)
     {
         modelInstance.SetActive(false);
 
-        Debug.Log("Removed anchor: " + modelInstance.transform.position.ToString("F2"));
-    }
-
-    void OnWorldMap(ARWorldMap worldMap)
-    {
-#if UNITY_EDITOR
-        ScreenCapture.CaptureScreenshot(ReferenceImageSaveName);
-#else
-        if (worldMap != null)
-        {
-            worldMap.Save(WorldMapSavePath);
-            ScreenCapture.CaptureScreenshot(ReferenceImageSaveName);
-            Debug.LogFormat("ARWorldMap saved to {0}", WorldMapSavePath);
-        }
-#endif
+        Debug.LogFormat("Removed anchor: {0} | {1}", anchorData.identifier, modelInstance.transform.position.ToString("F2"));
     }
 
     void SaveModel()
