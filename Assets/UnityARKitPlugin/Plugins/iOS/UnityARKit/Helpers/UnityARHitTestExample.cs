@@ -7,6 +7,12 @@ namespace UnityEngine.XR.iOS
     {
         public static UnityARHitTestExample Instance;
 
+        public GameObject HitTestModelPrefab;
+        public float maxRayDistance;
+        public float rotationSpeed;
+        public float scalingSpeed;
+        public LayerMask collisionLayer; // ARKitPlane layer
+
         struct SimpleModelTransform
         {
             public Vector3 position;
@@ -17,16 +23,56 @@ namespace UnityEngine.XR.iOS
         enum RotationState { None, CW, CCW }
         enum ScalingState { None, Up, Down }
 
-        public GameObject HitTestModelPrefab;
-        public float maxRayDistance;
-        public float rotationSpeed;
-        public float scalingSpeed;
-        public LayerMask collisionLayer; // ARKitPlane layer
-
-        const string PlayerPrefAnchorIdKey = "AnchorId";
-        const string PlayerPrefScaleXKey = "ScaleX";
-        const string PlayerPrefScaleYKey = "ScaleY";
-        const string PlayerPrefScaleZKey = "ScaleZ";
+        const string TestModePrefix = "TEST_";
+        string PlayerPrefAnchorIdKey
+        {
+            get
+            {
+                return (WorldMapManager.Instance.IsTestMode ? TestModePrefix : "") + "AnchorId";
+            }
+        }
+        string PlayerPrefScaleXKey
+        {
+            get
+            {
+                return (WorldMapManager.Instance.IsTestMode ? TestModePrefix : "") + "ScaleX";
+            }
+        }
+        string PlayerPrefScaleYKey
+        {
+            get
+            {
+                return (WorldMapManager.Instance.IsTestMode ? TestModePrefix : "") + "ScaleY";
+            }
+        }
+        string PlayerPrefScaleZKey
+        {
+            get
+            {
+                return (WorldMapManager.Instance.IsTestMode ? TestModePrefix : "") + "ScaleZ";
+            }
+        }
+        string PlayerPrefRotationXKey
+        {
+            get
+            {
+                return (WorldMapManager.Instance.IsTestMode ? TestModePrefix : "") + "RotX";
+            }
+        }
+        string PlayerPrefRotationYKey
+        {
+            get
+            {
+                return (WorldMapManager.Instance.IsTestMode ? TestModePrefix : "") + "RotY";
+            }
+        }
+        string PlayerPrefRotationZKey
+        {
+            get
+            {
+                return (WorldMapManager.Instance.IsTestMode ? TestModePrefix : "") + "RotZ";
+            }
+        }
         SimpleModelTransform originalModelTransform;
         RotationState rotationState = RotationState.None;
         ScalingState scalingState = ScalingState.None;
@@ -42,6 +88,10 @@ namespace UnityEngine.XR.iOS
             PlayerPrefs.SetFloat(PlayerPrefScaleXKey, hitTestModelInst.transform.localScale.x);
             PlayerPrefs.SetFloat(PlayerPrefScaleYKey, hitTestModelInst.transform.localScale.y);
             PlayerPrefs.SetFloat(PlayerPrefScaleZKey, hitTestModelInst.transform.localScale.z);
+
+            PlayerPrefs.SetFloat(PlayerPrefRotationXKey, hitTestModelInst.transform.eulerAngles.x);
+            PlayerPrefs.SetFloat(PlayerPrefRotationYKey, hitTestModelInst.transform.eulerAngles.y);
+            PlayerPrefs.SetFloat(PlayerPrefRotationZKey, hitTestModelInst.transform.eulerAngles.z);
         }
 
         public void ResetModel()
@@ -119,7 +169,7 @@ namespace UnityEngine.XR.iOS
                         PlayerPrefs.DeleteKey(PlayerPrefAnchorIdKey);
                     }
                     hitTestModelInst.transform.position = UnityARMatrixOps.GetPosition(hitResult.worldTransform);
-                    hitTestModelInst.transform.rotation = UnityARMatrixOps.GetRotation(hitResult.worldTransform);
+                    //hitTestModInst.transform.rotation = UnityARMatrixOps.GetRotation(hitResult.worldTransform);
                     hitTestModelInst.SetActive(true);
                     PlayerPrefs.SetString(PlayerPrefAnchorIdKey, UnityARSessionNativeInterface.GetARSessionNativeInterface().AddUserAnchorFromGameObject(hitTestModelInst).identifierStr);
                     return true;
@@ -139,6 +189,11 @@ namespace UnityEngine.XR.iOS
             if (PlayerPrefs.HasKey(PlayerPrefScaleXKey) && PlayerPrefs.HasKey(PlayerPrefScaleYKey) && PlayerPrefs.HasKey(PlayerPrefScaleZKey))
             {
                 hitTestModelInst.transform.localScale = new Vector3(PlayerPrefs.GetFloat(PlayerPrefScaleXKey), PlayerPrefs.GetFloat(PlayerPrefScaleYKey), PlayerPrefs.GetFloat(PlayerPrefScaleZKey));
+            }
+
+            if (PlayerPrefs.HasKey(PlayerPrefRotationXKey) && PlayerPrefs.HasKey(PlayerPrefRotationYKey) && PlayerPrefs.HasKey(PlayerPrefRotationZKey))
+            {
+                hitTestModelInst.transform.eulerAngles = new Vector3(PlayerPrefs.GetFloat(PlayerPrefRotationXKey), PlayerPrefs.GetFloat(PlayerPrefRotationYKey), PlayerPrefs.GetFloat(PlayerPrefRotationZKey));
             }
         }
 
@@ -191,36 +246,37 @@ namespace UnityEngine.XR.iOS
         void Update()
         {
             if (Input.touchCount > 0 && !IsPointerOverUIObject())
-			{
-				var touch = Input.GetTouch(0);
-				if (touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Moved)
-				{
-					var screenPosition = Camera.main.ScreenToViewportPoint(touch.position);
-					ARPoint point = new ARPoint {
-						x = screenPosition.x,
-						y = screenPosition.y
-					};
+            {
+                var touch = Input.GetTouch(0);
+                if (touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Moved)
+                {
+                    var screenPosition = Camera.main.ScreenToViewportPoint(touch.position);
+                    ARPoint point = new ARPoint
+                    {
+                        x = screenPosition.x,
+                        y = screenPosition.y
+                    };
 
                     // prioritize reults types
                     ARHitTestResultType[] resultTypes = {
-						ARHitTestResultType.ARHitTestResultTypeExistingPlaneUsingGeometry,
+                        ARHitTestResultType.ARHitTestResultTypeExistingPlaneUsingGeometry,
                         //ARHitTestResultType.ARHitTestResultTypeExistingPlaneUsingExtent, 
                         // if you want to use infinite planes use this:
                         //ARHitTestResultType.ARHitTestResultTypeExistingPlane,
                         ARHitTestResultType.ARHitTestResultTypeEstimatedHorizontalPlane, 
 						//ARHitTestResultType.ARHitTestResultTypeEstimatedVerticalPlane, 
 						//ARHitTestResultType.ARHitTestResultTypeFeaturePoint
-                    }; 
-					
+                    };
+
                     foreach (ARHitTestResultType resultType in resultTypes)
                     {
-                        if (HitTestWithResultType (point, resultType))
+                        if (HitTestWithResultType(point, resultType))
                         {
                             return;
                         }
                     }
-				}
-			}
+                }
+            }
 
             switch (rotationState)
             {

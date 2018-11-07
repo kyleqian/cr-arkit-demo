@@ -5,18 +5,29 @@ using UnityEngine.XR.iOS;
 
 public class WorldMapManager : MonoBehaviour
 {
+    public static WorldMapManager Instance;
+
     [SerializeField] UnityARCameraManager m_ARCameraManager;
     [SerializeField] Image ReferenceImage;
     [SerializeField] Toggle TestModeToggle;
 
+    public bool IsTestMode { get; private set; }
+
     ARWorldMap m_LoadedMap;
     serializableARWorldMap serializedWorldMap;
     ARTrackingStateReason m_LastReason;
-    bool testMode;
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+    }
 
     void Start()
     {
-        testMode = TestModeToggle.isOn;
+        IsTestMode = TestModeToggle.isOn;
         TestModeToggle.onValueChanged.AddListener(OnTestModeToggle);
         UnityARSessionNativeInterface.ARSessionShouldAttemptRelocalization = true;
         UnityARSessionNativeInterface.ARFrameUpdatedEvent += OnFrameUpdate;
@@ -26,11 +37,15 @@ public class WorldMapManager : MonoBehaviour
     {
         TestModeToggle.onValueChanged.RemoveListener(OnTestModeToggle);
         UnityARSessionNativeInterface.ARFrameUpdatedEvent -= OnFrameUpdate;
+        if (Instance == this)
+        {
+            Instance = null;
+        }
     }
 
     void OnTestModeToggle(bool isOn)
     {
-        testMode = isOn;
+        IsTestMode = isOn;
     }
 
     void OnFrameUpdate(UnityARCamera arCamera)
@@ -53,7 +68,7 @@ public class WorldMapManager : MonoBehaviour
     {
         get
         {
-            return Path.Combine(Application.persistentDataPath, testMode ? "TESTmyFirstWorldMap.worldmap" : "myFirstWorldMap.worldmap");
+            return Path.Combine(Application.persistentDataPath, IsTestMode ? "TESTmyFirstWorldMap.worldmap" : "myFirstWorldMap.worldmap");
         }
     }
 
@@ -65,13 +80,14 @@ public class WorldMapManager : MonoBehaviour
 #if UNITY_EDITOR
             saveName += "ReferenceImages/";
 #endif
-            return saveName + (testMode ? "TEST_" : "") + "ReferenceImage.png";
+            return saveName + (IsTestMode ? "TEST_" : "") + "ReferenceImage.png";
         }
     }
 
     void OnWorldMap(ARWorldMap worldMap)
     {
         // TODO
+        //UnityARHitTestExample.Instance.RecordModelScale();
         UnityARHitTestExample.Instance.RecordModelScale();
         PlayerPrefs.Save();
 
