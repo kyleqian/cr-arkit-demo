@@ -10,9 +10,11 @@ public class ToggleColorControl : MonoBehaviour
     void Start()
     {
         toggle = GetComponent<Toggle>();
-        onColorBlock = toggle.colors;
         offColorBlock = toggle.colors;
-        offColorBlock.normalColor /= 2;
+        onColorBlock = toggle.colors;
+        onColorBlock.normalColor /= 2;
+
+        toggle.colors = toggle.isOn ? onColorBlock : offColorBlock;
         toggle.onValueChanged.AddListener(OnToggleValueChanged);
     }
 

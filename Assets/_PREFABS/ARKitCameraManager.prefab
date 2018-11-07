@@ -9,30 +9,30 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1923766979984136}
+  m_RootGameObject: {fileID: 1623490086756602}
   m_IsPrefabAsset: 1
---- !u!1 &1923766979984136
+--- !u!1 &1623490086756602
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4121058747806828}
-  - component: {fileID: 114963946153540636}
+  - component: {fileID: 4068407642586498}
+  - component: {fileID: 114744845190587776}
   m_Layer: 0
-  m_Name: ARWorldMapManager
+  m_Name: ARKitCameraManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4121058747806828
+--- !u!4 &4068407642586498
 Transform:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1923766979984136}
+  m_GameObject: {fileID: 1623490086756602}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -40,17 +40,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114963946153540636
+--- !u!114 &114744845190587776
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1923766979984136}
+  m_GameObject: {fileID: 1623490086756602}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b560694452f2c4413b835be89150c3ca, type: 3}
+  m_Script: {fileID: 11500000, guid: 0a8b0990c74db4bb5976eddf2c58ab92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ARCameraManager: {fileID: 0}
-  ReferenceImage: {fileID: 0}
-  TestModeToggle: {fileID: 0}
+  m_camera: {fileID: 0}
+  startAlignment: 0
+  planeDetection: 3
+  getPointCloud: 1
+  enableLightEstimation: 0
+  enableAutoFocus: 1
+  environmentTexturing: 0
+  detectionImages: {fileID: 0}
+  maximumNumberOfTrackedImages: 0
+  detectionObjects: {fileID: 0}

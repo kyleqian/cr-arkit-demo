@@ -1,8 +1,10 @@
 using UnityEngine;
 using UnityEngine.XR.iOS;
 
-public class UnityARCameraManager : MonoBehaviour
+public class ARKitCameraManager : MonoBehaviour
 {
+    public static ARKitCameraManager Instance;
+
     public Camera m_camera;
     private UnityARSessionNativeInterface m_session;
     private Material savedClearMaterial;
@@ -45,6 +47,22 @@ public class UnityARCameraManager : MonoBehaviour
             }
 
             return config;
+        }
+    }
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
         }
     }
 
