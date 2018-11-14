@@ -53,8 +53,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   referenceImage: {fileID: 0}
   testModeToggle: {fileID: 0}
-  modelPrefab: {fileID: 1653022574939592, guid: 6980b96dbb7a3471d857f77a744884a1,
-    type: 2}
+  modelPrefab: {fileID: 0}
   maxRayDistance: 30
   rotationSpeed: 100
   scalingSpeed: 0.5
