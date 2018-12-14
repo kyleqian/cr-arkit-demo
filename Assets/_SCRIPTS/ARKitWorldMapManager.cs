@@ -144,7 +144,13 @@ public class ARKitWorldMapManager : MonoBehaviour
     IEnumerator SaveWorldMapCoroutine()
     {
         SaveModel();
+
+        // Wait one frame for model to save.
         yield return null;
+
+        // Wait two frames? There seems to be a rare bug where the map doesn't save correctly.
+        yield return null;
+
         Session.GetCurrentWorldMapAsync(OnWorldMap);
     }
 
