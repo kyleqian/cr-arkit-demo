@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -13,9 +14,16 @@ public class ARKitWorldMapManager : MonoBehaviour
     enum RotationState { None, CW, CCW }
     enum ScalingState { None, Up, Down }
 
-    [SerializeField] Image referenceImage;
+    // Because you can't have dictionaries in the inspector?
+    enum ModelType { Plaque, Statue }
+    [SerializeField] GameObject plaquePrefab;
+    [SerializeField] GameObject statuePrefab;
+    Dictionary<ModelType, GameObject> modelTypeToModelInstance = new Dictionary<ModelType, GameObject>();
+    GameObject ModelInstance { get { return modelTypeToModelInstance[modelType]; } }
+
+    [SerializeField] Text modelTypeText;
+    [SerializeField] GameObject referenceImage;
     [SerializeField] Toggle testModeToggle;
-    [SerializeField] GameObject modelPrefab;
     [SerializeField] float maxRayDistance;
     [SerializeField] float rotationSpeed;
     [SerializeField] float scalingSpeed;
@@ -26,18 +34,26 @@ public class ARKitWorldMapManager : MonoBehaviour
 #if !UNITY_EDITOR
     ARHitTestResultType[] hitTestResultPriorityOrder = {
         ARHitTestResultType.ARHitTestResultTypeExistingPlaneUsingGeometry,
-        //ARHitTestResultType.ARHitTestResultTypeExistingPlaneUsingExtent, 
+        //ARHitTestResultType.ARHitTestResultTypeExistingPlaneUsingExtent,
         //ARHitTestResultType.ARHitTestResultTypeExistingPlane,
-        ARHitTestResultType.ARHitTestResultTypeEstimatedHorizontalPlane, 
-        //ARHitTestResultType.ARHitTestResultTypeEstimatedVerticalPlane, 
+        ARHitTestResultType.ARHitTestResultTypeEstimatedHorizontalPlane,
+        //ARHitTestResultType.ARHitTestResultTypeEstimatedVerticalPlane,
         //ARHitTestResultType.ARHitTestResultTypeFeaturePoint
     };
 #endif
     RotationState rotationState = RotationState.None;
     ScalingState scalingState = ScalingState.None;
-    GameObject modelInstance;
+    ModelType modelType = ModelType.Plaque;
 
-    string TestModePrefixIfNeeded { get { return IsTestMode ? "TEST_" : ""; } }
+    string WorldMapSavedAssetPrefixes
+    {
+        get
+        {
+            return string.Format("{0}{1}_",
+                                 IsTestMode ? "TEST_" : "",
+                                 modelType.ToString());
+        }
+    }
 
     UnityARSessionNativeInterface Session
     {
@@ -48,7 +64,7 @@ public class ARKitWorldMapManager : MonoBehaviour
     {
         get
         {
-            return Path.Combine(Application.persistentDataPath, TestModePrefixIfNeeded + "save.worldmap");
+            return Path.Combine(Application.persistentDataPath, WorldMapSavedAssetPrefixes + "save.worldmap");
         }
     }
 
@@ -60,14 +76,14 @@ public class ARKitWorldMapManager : MonoBehaviour
 #if UNITY_EDITOR
             saveName += "ReferenceImages/";
 #endif
-            return saveName + TestModePrefixIfNeeded + "ReferenceImage.png";
+            return saveName + WorldMapSavedAssetPrefixes + "ReferenceImage.png";
         }
     }
 
-    string PlayerPrefAnchorIdKey { get { return TestModePrefixIfNeeded + "AnchorId"; } }
-    string PlayerPrefScaleXKey { get { return TestModePrefixIfNeeded + "ScaleX"; } }
-    string PlayerPrefScaleYKey { get { return TestModePrefixIfNeeded + "ScaleY"; } }
-    string PlayerPrefScaleZKey { get { return TestModePrefixIfNeeded + "ScaleZ"; } }
+    string PlayerPrefAnchorIdKey { get { return WorldMapSavedAssetPrefixes + "AnchorId"; } }
+    string PlayerPrefScaleXKey { get { return WorldMapSavedAssetPrefixes + "ScaleX"; } }
+    string PlayerPrefScaleYKey { get { return WorldMapSavedAssetPrefixes + "ScaleY"; } }
+    string PlayerPrefScaleZKey { get { return WorldMapSavedAssetPrefixes + "ScaleZ"; } }
 
     public void StartCWRotation()
     {
@@ -99,9 +115,21 @@ public class ARKitWorldMapManager : MonoBehaviour
         scalingState = ScalingState.None;
     }
 
+    public void ChangeModelType()
+    {
+        ResetARSession();
+        modelType++;
+        if ((int)modelType == Enum.GetNames(typeof(ModelType)).Length)
+        {
+            modelType = 0;
+        }
+        modelTypeText.text = modelType.ToString();
+    }
+
     public void ResetARSession()
     {
-        modelInstance.SetActive(false);
+        ModelInstance.SetActive(false);
+        referenceImage.SetActive(false);
         Session.RunWithConfigAndOptions(ARKitCameraManager.Instance.sessionConfiguration, UnityARSessionRunOption.ARSessionRunOptionRemoveExistingAnchors | UnityARSessionRunOption.ARSessionRunOptionResetTracking);
     }
 
@@ -137,8 +165,8 @@ public class ARKitWorldMapManager : MonoBehaviour
     public void LoadWorldMap()
     {
 #if UNITY_EDITOR
-        referenceImage.sprite = UtilitiesCR.LoadNewSprite(Application.dataPath + "/../" + ReferenceImageSaveName);
-        referenceImage.color = new Color(1, 1, 1, 1);
+        referenceImage.GetComponent<Image>().sprite = UtilitiesCR.LoadNewSprite(Application.dataPath + "/../" + ReferenceImageSaveName);
+        referenceImage.SetActive(true);
 #else
         Debug.LogFormat("Loading ARWorldMap {0}", WorldMapSavePath);
         var worldMap = ARWorldMap.Load(WorldMapSavePath);
@@ -153,68 +181,68 @@ public class ARKitWorldMapManager : MonoBehaviour
             Debug.Log("Restarting session with worldMap");
             Session.RunWithConfigAndOptions(config, runOption);
 
-            referenceImage.sprite = UtilitiesCR.LoadNewSprite(Application.persistentDataPath + "/" + ReferenceImageSaveName);
-            referenceImage.color = new Color(1, 1, 1, 1);
+            referenceImage.GetComponent<Image>().sprite = UtilitiesCR.LoadNewSprite(Application.persistentDataPath + "/" + ReferenceImageSaveName);
+            referenceImage.SetActive(true);
         }
 #endif
     }
 
     void UnityARSessionNativeInterface_ARUserAnchorAddedEvent(ARUserAnchor anchorData)
     {
-        modelInstance.transform.position = UnityARMatrixOps.GetPosition(anchorData.transform);
-        modelInstance.transform.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
-        modelInstance.SetActive(true);
+        ModelInstance.transform.position = UnityARMatrixOps.GetPosition(anchorData.transform);
+        ModelInstance.transform.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
+        ModelInstance.SetActive(true);
 
-        Debug.LogFormat("Added anchor: {0} | {1}", anchorData.identifier, modelInstance.transform.position.ToString("F2"));
+        Debug.LogFormat("Added anchor: {0} | {1}", anchorData.identifier, ModelInstance.transform.position.ToString("F2"));
 
         if (PlayerPrefs.HasKey(PlayerPrefScaleXKey) && PlayerPrefs.HasKey(PlayerPrefScaleYKey) && PlayerPrefs.HasKey(PlayerPrefScaleZKey))
         {
-            modelInstance.transform.localScale = new Vector3(PlayerPrefs.GetFloat(PlayerPrefScaleXKey), PlayerPrefs.GetFloat(PlayerPrefScaleYKey), PlayerPrefs.GetFloat(PlayerPrefScaleZKey));
+            ModelInstance.transform.localScale = new Vector3(PlayerPrefs.GetFloat(PlayerPrefScaleXKey), PlayerPrefs.GetFloat(PlayerPrefScaleYKey), PlayerPrefs.GetFloat(PlayerPrefScaleZKey));
         }
     }
 
     void UnityARSessionNativeInterface_ARUserAnchorUpdatedEvent(ARUserAnchor anchorData)
     {
-        modelInstance.transform.position = UnityARMatrixOps.GetPosition(anchorData.transform);
-        modelInstance.transform.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
+        ModelInstance.transform.position = UnityARMatrixOps.GetPosition(anchorData.transform);
+        ModelInstance.transform.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
 
-        Debug.LogFormat("Updated anchor: {0} | {1}", anchorData.identifier, modelInstance.transform.position.ToString("F2"));
+        Debug.LogFormat("Updated anchor: {0} | {1}", anchorData.identifier, ModelInstance.transform.position.ToString("F2"));
     }
 
     void UnityARSessionNativeInterface_ARUserAnchorRemovedEvent(ARUserAnchor anchorData)
     {
-        modelInstance.SetActive(false);
+        ModelInstance.SetActive(false);
 
-        Debug.LogFormat("Removed anchor: {0} | {1}", anchorData.identifier, modelInstance.transform.position.ToString("F2"));
+        Debug.LogFormat("Removed anchor: {0} | {1}", anchorData.identifier, ModelInstance.transform.position.ToString("F2"));
     }
 
     void SaveModel()
     {
-        PlayerPrefs.SetFloat(PlayerPrefScaleXKey, modelInstance.transform.localScale.x);
-        PlayerPrefs.SetFloat(PlayerPrefScaleYKey, modelInstance.transform.localScale.y);
-        PlayerPrefs.SetFloat(PlayerPrefScaleZKey, modelInstance.transform.localScale.z);
+        PlayerPrefs.SetFloat(PlayerPrefScaleXKey, ModelInstance.transform.localScale.x);
+        PlayerPrefs.SetFloat(PlayerPrefScaleYKey, ModelInstance.transform.localScale.y);
+        PlayerPrefs.SetFloat(PlayerPrefScaleZKey, ModelInstance.transform.localScale.z);
 
         if (PlayerPrefs.HasKey(PlayerPrefAnchorIdKey))
         {
             Session.RemoveUserAnchor(PlayerPrefs.GetString(PlayerPrefAnchorIdKey));
             PlayerPrefs.DeleteKey(PlayerPrefAnchorIdKey);
         }
-        PlayerPrefs.SetString(PlayerPrefAnchorIdKey, Session.AddUserAnchorFromGameObject(modelInstance).identifierStr);
+        PlayerPrefs.SetString(PlayerPrefAnchorIdKey, Session.AddUserAnchorFromGameObject(ModelInstance).identifierStr);
     }
 
     void RotateModel(bool clockwise)
     {
-        modelInstance.transform.Rotate((clockwise ? 1 : -1) * rotationSpeed * Vector3.up * Time.deltaTime);
+        ModelInstance.transform.Rotate((clockwise ? 1 : -1) * rotationSpeed * Vector3.up * Time.deltaTime);
     }
 
     void ScaleModel(bool scaleUp)
     {
-        Vector3 newScale = modelInstance.transform.localScale + ((scaleUp ? 1 : -1) * scalingSpeed * Vector3.one * Time.deltaTime);
+        Vector3 newScale = ModelInstance.transform.localScale + ((scaleUp ? 1 : -1) * scalingSpeed * Vector3.one * Time.deltaTime);
         if (newScale.x < 0 || newScale.y < 0 || newScale.z < 0)
         {
             return;
         }
-        modelInstance.transform.localScale = newScale;
+        ModelInstance.transform.localScale = newScale;
     }
 
     bool IsPointerOverUIObject()
@@ -233,8 +261,8 @@ public class ARKitWorldMapManager : MonoBehaviour
         {
             foreach (var hitResult in hitResults)
             {
-                modelInstance.transform.position = UnityARMatrixOps.GetPosition(hitResult.worldTransform);
-                modelInstance.SetActive(true);
+                ModelInstance.transform.position = UnityARMatrixOps.GetPosition(hitResult.worldTransform);
+                ModelInstance.SetActive(true);
                 return true;
             }
         }
@@ -268,6 +296,14 @@ public class ARKitWorldMapManager : MonoBehaviour
 #endif
     }
 
+    void PopulateModelDictionary()
+    {
+        modelTypeToModelInstance[ModelType.Plaque] = Instantiate(plaquePrefab);
+        modelTypeToModelInstance[ModelType.Plaque].SetActive(false);
+        modelTypeToModelInstance[ModelType.Statue] = Instantiate(statuePrefab);
+        modelTypeToModelInstance[ModelType.Statue].SetActive(false);
+    }
+
     void Awake()
     {
         if (Instance == null)
@@ -275,8 +311,8 @@ public class ARKitWorldMapManager : MonoBehaviour
             Instance = this;
         }
         Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.None);
-        modelInstance = Instantiate(modelPrefab);
-        modelInstance.SetActive(false);
+        PopulateModelDictionary();
+        referenceImage.SetActive(false);
         UnityARSessionNativeInterface.ARUserAnchorAddedEvent += UnityARSessionNativeInterface_ARUserAnchorAddedEvent;
         UnityARSessionNativeInterface.ARUserAnchorUpdatedEvent += UnityARSessionNativeInterface_ARUserAnchorUpdatedEvent;
         UnityARSessionNativeInterface.ARUserAnchorRemovedEvent += UnityARSessionNativeInterface_ARUserAnchorRemovedEvent;
@@ -284,6 +320,7 @@ public class ARKitWorldMapManager : MonoBehaviour
 
     void Start()
     {
+        modelTypeText.text = modelType.ToString();
         UnityARSessionNativeInterface.ARSessionShouldAttemptRelocalization = true;
     }
 
@@ -322,7 +359,6 @@ public class ARKitWorldMapManager : MonoBehaviour
         {
             Instance = null;
         }
-        Destroy(modelInstance);
         UnityARSessionNativeInterface.ARUserAnchorAddedEvent -= UnityARSessionNativeInterface_ARUserAnchorAddedEvent;
         UnityARSessionNativeInterface.ARUserAnchorUpdatedEvent -= UnityARSessionNativeInterface_ARUserAnchorUpdatedEvent;
         UnityARSessionNativeInterface.ARUserAnchorRemovedEvent -= UnityARSessionNativeInterface_ARUserAnchorRemovedEvent;
