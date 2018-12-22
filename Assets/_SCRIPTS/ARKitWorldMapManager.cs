@@ -316,18 +316,20 @@ public class ARKitWorldMapManager : MonoBehaviour
         {
             Instance = this;
         }
-        Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.None);
         PopulateModelDictionary();
-        referenceImage.SetActive(false);
-        UnityARSessionNativeInterface.ARUserAnchorAddedEvent += UnityARSessionNativeInterface_ARUserAnchorAddedEvent;
-        UnityARSessionNativeInterface.ARUserAnchorUpdatedEvent += UnityARSessionNativeInterface_ARUserAnchorUpdatedEvent;
-        UnityARSessionNativeInterface.ARUserAnchorRemovedEvent += UnityARSessionNativeInterface_ARUserAnchorRemovedEvent;
     }
 
     void Start()
     {
-        modelTypeText.text = modelType.ToString();
+        Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.None);
+        referenceImage.SetActive(false);
+
+        UnityARSessionNativeInterface.ARUserAnchorAddedEvent += UnityARSessionNativeInterface_ARUserAnchorAddedEvent;
+        UnityARSessionNativeInterface.ARUserAnchorUpdatedEvent += UnityARSessionNativeInterface_ARUserAnchorUpdatedEvent;
+        UnityARSessionNativeInterface.ARUserAnchorRemovedEvent += UnityARSessionNativeInterface_ARUserAnchorRemovedEvent;
         UnityARSessionNativeInterface.ARSessionShouldAttemptRelocalization = true;
+
+        modelTypeText.text = modelType.ToString();
     }
 
     void Update()
