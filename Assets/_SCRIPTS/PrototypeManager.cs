@@ -84,19 +84,18 @@ public class PrototypeManager : MonoBehaviour
 
     void Awake()
     {
+        Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.None);
         modelInstance = Instantiate(modelPrefab);
         modelInstance.SetActive(false);
+        referenceImage.SetActive(false);
     }
 
     void Start()
     {
-        Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.None);
         UnityARSessionNativeInterface.ARUserAnchorAddedEvent += UnityARSessionNativeInterface_ARUserAnchorAddedEvent;
         UnityARSessionNativeInterface.ARUserAnchorUpdatedEvent += UnityARSessionNativeInterface_ARUserAnchorUpdatedEvent;
         UnityARSessionNativeInterface.ARUserAnchorRemovedEvent += UnityARSessionNativeInterface_ARUserAnchorRemovedEvent;
         UnityARSessionNativeInterface.ARSessionShouldAttemptRelocalization = true;
-
-        referenceImage.SetActive(false);
         LoadWorldMap();
     }
 
