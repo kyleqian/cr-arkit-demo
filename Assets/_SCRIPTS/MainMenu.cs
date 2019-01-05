@@ -12,4 +12,9 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadScene("PrototypeMode1", LoadSceneMode.Single);
     }
+
+    public void LoadAudioTest()
+    {
+        SceneManager.LoadScene("PrototypeMode3", LoadSceneMode.Single);
+    }
 }

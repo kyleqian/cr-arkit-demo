@@ -8,7 +8,11 @@ public class PrototypeAudioUI : MonoBehaviour
     [SerializeField] GameObject button;
     [SerializeField] GameObject background;
 
-    AudioSource recording;
+    [Header("Audio Clips")]
+    [SerializeField] AudioClip clip1;
+    [SerializeField] AudioClip clip2;
+
+    AudioSource audioSource;
 
     public void ReturnToPlaqueScene()
     {
@@ -28,15 +32,28 @@ public class PrototypeAudioUI : MonoBehaviour
         yield return new WaitForSeconds(3);
 
         // Play audio
-        recording.Play();
-        Invoke("OnAudioFinished", recording.clip.length);
+        audioSource.Play();
+        Invoke("OnAudioFinished", audioSource.clip.length);
     }
 
     void Awake()
     {
-        recording = GetComponent<AudioSource>();
-        button.SetActive(false);
+        audioSource = GetComponent<AudioSource>();
         Input.multiTouchEnabled = false;
+        button.SetActive(false);
+    }
+
+    // Call IndestructibleSceneTracker here because SceneManager.activeSceneChanged seems to be called in Awake.
+    void Start()
+    {
+        if (IndestructibleSceneTracker.Instance.GetCountForSceneIndex(SceneManager.GetActiveScene().buildIndex) <= 1)
+        {
+            audioSource.clip = clip1;
+        }
+        else
+        {
+            audioSource.clip = clip2;
+        }
         StartCoroutine(PlayAudio());
     }
 }

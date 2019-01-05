@@ -446,6 +446,8 @@ MonoBehaviour:
   text: {fileID: 1026119695}
   button: {fileID: 2010488415}
   background: {fileID: 1486296733}
+  clip1: {fileID: 8300000, guid: 39efac4432169446caf5394c2df881a5, type: 3}
+  clip2: {fileID: 8300000, guid: f05058be2fb7e46c59edeae5febb368b, type: 3}
 --- !u!82 &1809767278
 AudioSource:
   m_ObjectHideFlags: 0
@@ -455,7 +457,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 39efac4432169446caf5394c2df881a5, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
