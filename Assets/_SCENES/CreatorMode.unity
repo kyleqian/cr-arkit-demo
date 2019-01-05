@@ -766,9 +766,18 @@ Prefab:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1870967954594856, guid: 935a083a732b9430496527aca9185efd, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 935a083a732b9430496527aca9185efd, type: 2}
   m_IsPrefabAsset: 0
+--- !u!1 &11369356 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1870967954594856, guid: 935a083a732b9430496527aca9185efd,
+    type: 2}
+  m_PrefabInternal: {fileID: 11369355}
 --- !u!1001 &17055395
 Prefab:
   m_ObjectHideFlags: 0
@@ -823,6 +832,21 @@ Prefab:
       propertyPath: testModeToggle
       value: 
       objectReference: {fileID: 338546212}
+    - target: {fileID: 114859422087682938, guid: dac39d4d3cc544e5f96e8029eb9c3685,
+        type: 2}
+      propertyPath: PointCloud
+      value: 
+      objectReference: {fileID: 481742511}
+    - target: {fileID: 114859422087682938, guid: dac39d4d3cc544e5f96e8029eb9c3685,
+        type: 2}
+      propertyPath: ScreenUI
+      value: 
+      objectReference: {fileID: 11369356}
+    - target: {fileID: 114859422087682938, guid: dac39d4d3cc544e5f96e8029eb9c3685,
+        type: 2}
+      propertyPath: PointCloudGenerator
+      value: 
+      objectReference: {fileID: 481742513}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dac39d4d3cc544e5f96e8029eb9c3685, type: 2}
   m_IsPrefabAsset: 0

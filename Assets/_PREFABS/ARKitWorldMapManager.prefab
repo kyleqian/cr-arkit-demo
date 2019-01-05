@@ -64,3 +64,5 @@ MonoBehaviour:
   collisionLayer:
     serializedVersion: 2
     m_Bits: 1024
+  PointCloud: {fileID: 0}
+  ScreenUI: {fileID: 0}

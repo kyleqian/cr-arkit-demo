@@ -29,6 +29,10 @@ public class ARKitWorldMapManager : MonoBehaviour
     [SerializeField] float scalingSpeed;
     [SerializeField] LayerMask collisionLayer; // ARKitPlane layer
 
+    [Header("GameObjects to hide for screenshot")]
+    [SerializeField] PointCloudParticleExample PointCloudGenerator;
+    [SerializeField] GameObject ScreenUI;
+
     public bool IsTestMode { get { return testModeToggle.isOn; } }
 
 #if !UNITY_EDITOR
@@ -62,22 +66,24 @@ public class ARKitWorldMapManager : MonoBehaviour
 
     string WorldMapSavePath
     {
+        get { return Path.Combine(Application.persistentDataPath, WorldMapSavedAssetPrefixes + "save.worldmap"); }
+    }
+
+    string ReferenceImageSavePath
+    {
         get
         {
-            return Path.Combine(Application.persistentDataPath, WorldMapSavedAssetPrefixes + "save.worldmap");
+#if UNITY_EDITOR
+            return Path.Combine(Application.dataPath, Path.Combine("../ReferenceImages", ReferenceImageSaveName));
+#else
+            return Path.Combine(Application.persistentDataPath, ReferenceImageSaveName);
+#endif
         }
     }
 
     string ReferenceImageSaveName
     {
-        get
-        {
-            string saveName = "";
-#if UNITY_EDITOR
-            saveName += "ReferenceImages/";
-#endif
-            return saveName + WorldMapSavedAssetPrefixes + "ReferenceImage.png";
-        }
+        get { return WorldMapSavedAssetPrefixes + "ReferenceImage.png"; }
     }
 
     string PlayerPrefAnchorIdKey { get { return WorldMapSavedAssetPrefixes + "AnchorId"; } }
@@ -162,16 +168,39 @@ public class ARKitWorldMapManager : MonoBehaviour
         if (worldMap != null)
         {
             worldMap.Save(WorldMapSavePath);
+
+            // Temporarily hide elements just for screenshot
+            PointCloudGenerator.ToggleParticles(false);
+            ScreenUI.SetActive(false);
+            ModelInstance.SetActive(false);
+
             ScreenCapture.CaptureScreenshot(ReferenceImageSaveName);
+            StartCoroutine(BecauseIOSScreenshotBehaviorIsUndefined());
+
             Debug.LogFormat("ARWorldMap saved to {0}", WorldMapSavePath);
         }
 #endif
     }
 
+    // Un-hide elements after waiting for screenshot to happen
+    IEnumerator BecauseIOSScreenshotBehaviorIsUndefined()
+    {
+        // Wait a few frames
+        yield return null;
+        yield return null;
+        yield return null;
+        yield return null;
+        yield return null;
+
+        ScreenUI.SetActive(true);
+        ModelInstance.SetActive(true);
+        PointCloudGenerator.ToggleParticles(true);
+    }
+
     public void LoadWorldMap()
     {
 #if UNITY_EDITOR
-        referenceImage.GetComponent<Image>().sprite = UtilitiesCR.LoadNewSprite(Application.dataPath + "/../" + ReferenceImageSaveName);
+        referenceImage.GetComponent<Image>().sprite = UtilitiesCR.LoadNewSprite(ReferenceImageSavePath);
         referenceImage.SetActive(true);
 #else
         Debug.LogFormat("Loading ARWorldMap {0}", WorldMapSavePath);
@@ -187,7 +216,7 @@ public class ARKitWorldMapManager : MonoBehaviour
             Debug.Log("Restarting session with worldMap");
             Session.RunWithConfigAndOptions(config, runOption);
 
-            referenceImage.GetComponent<Image>().sprite = UtilitiesCR.LoadNewSprite(Application.persistentDataPath + "/" + ReferenceImageSaveName);
+            referenceImage.GetComponent<Image>().sprite = UtilitiesCR.LoadNewSprite(ReferenceImageSavePath);
             referenceImage.SetActive(true);
         }
 #endif

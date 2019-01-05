@@ -39,11 +39,10 @@ public class PrototypeAudioUI : MonoBehaviour
     void Awake()
     {
         audioSource = GetComponent<AudioSource>();
-        Input.multiTouchEnabled = false;
         button.SetActive(false);
     }
 
-    // Call IndestructibleSceneTracker here because SceneManager.activeSceneChanged seems to be called in Awake.
+    // Call IndestructibleSceneTracker here because SceneManager.activeSceneChanged seems to be called in Awake
     void Start()
     {
         if (IndestructibleSceneTracker.Instance.GetCountForSceneIndex(SceneManager.GetActiveScene().buildIndex) <= 1)

@@ -718,7 +718,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Reference
+  m_Text: Look for plaque here
 --- !u!222 &1584544459
 CanvasRenderer:
   m_ObjectHideFlags: 0

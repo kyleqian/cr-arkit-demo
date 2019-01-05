@@ -12,6 +12,11 @@ public class PointCloudParticleExample : MonoBehaviour {
     private ParticleSystem currentPS;
     private ParticleSystem.Particle [] particles;
 
+    public void ToggleParticles(bool active)
+    {
+        currentPS.gameObject.SetActive(active);
+    }
+
 	// Use this for initialization
 	void Start () {
         UnityARSessionNativeInterface.ARFrameUpdatedEvent += ARFrameUpdated;
