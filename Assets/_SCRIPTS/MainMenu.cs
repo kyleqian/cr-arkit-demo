@@ -17,4 +17,9 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadScene("PrototypeMode3", LoadSceneMode.Single);
     }
+
+    public void LoadGpsTest()
+    {
+        SceneManager.LoadScene("TestGPS", LoadSceneMode.Single);
+    }
 }

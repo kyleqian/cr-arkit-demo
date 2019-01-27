@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_SCENES/PrototypeMode3.unity
     guid: c343bbbf2f087417094d1994d8430ff6
+  - enabled: 1
+    path: Assets/_SCENES/TestGPS.unity
+    guid: 13731f3abe7964897a4e7ad846df8c40
   m_configObjects: {}
