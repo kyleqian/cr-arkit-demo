@@ -226,14 +226,14 @@ public class ARKitWorldMapManager : MonoBehaviour
     {
         ModelInstance.transform.position = UnityARMatrixOps.GetPosition(anchorData.transform);
         ModelInstance.transform.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
-        ModelInstance.SetActive(true);
-
         Debug.LogFormat("Added anchor: {0} | {1}", anchorData.identifier, ModelInstance.transform.position.ToString("F2"));
 
         if (PlayerPrefs.HasKey(PlayerPrefScaleXKey) && PlayerPrefs.HasKey(PlayerPrefScaleYKey) && PlayerPrefs.HasKey(PlayerPrefScaleZKey))
         {
             ModelInstance.transform.localScale = new Vector3(PlayerPrefs.GetFloat(PlayerPrefScaleXKey), PlayerPrefs.GetFloat(PlayerPrefScaleYKey), PlayerPrefs.GetFloat(PlayerPrefScaleZKey));
         }
+
+        ModelInstance.SetActive(true);
     }
 
     void UnityARSessionNativeInterface_ARUserAnchorUpdatedEvent(ARUserAnchor anchorData)
