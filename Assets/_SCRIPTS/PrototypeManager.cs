@@ -34,7 +34,6 @@ public class PrototypeManager : MonoBehaviour
     {
         modelInstance.transform.position = UnityARMatrixOps.GetPosition(anchorData.transform);
         modelInstance.transform.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
-        modelInstance.SetActive(true);
 
         Debug.LogFormat("Added anchor: {0} | {1}", anchorData.identifier, modelInstance.transform.position.ToString("F2"));
 
@@ -44,6 +43,7 @@ public class PrototypeManager : MonoBehaviour
         }
 
         // TODO
+        modelInstance.SetActive(true);
         referenceImage.SetActive(false);
     }
 

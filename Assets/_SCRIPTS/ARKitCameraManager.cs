@@ -91,37 +91,6 @@ public class ARKitCameraManager : MonoBehaviour
         UnityARSessionNativeInterface.ARFrameUpdatedEvent -= FirstFrameUpdate;
     }
 
-    public void SetCamera(Camera newCamera)
-    {
-        if (m_camera != null)
-        {
-            UnityARVideo oldARVideo = m_camera.gameObject.GetComponent<UnityARVideo>();
-            if (oldARVideo != null)
-            {
-                savedClearMaterial = oldARVideo.m_ClearMaterial;
-                Destroy(oldARVideo);
-            }
-        }
-        SetupNewCamera(newCamera);
-    }
-
-    private void SetupNewCamera(Camera newCamera)
-    {
-        m_camera = newCamera;
-
-        if (m_camera != null)
-        {
-            UnityARVideo unityARVideo = m_camera.gameObject.GetComponent<UnityARVideo>();
-            if (unityARVideo != null)
-            {
-                savedClearMaterial = unityARVideo.m_ClearMaterial;
-                Destroy(unityARVideo);
-            }
-            unityARVideo = m_camera.gameObject.AddComponent<UnityARVideo>();
-            unityARVideo.m_ClearMaterial = savedClearMaterial;
-        }
-    }
-
     void Update()
     {
         if (m_camera != null && sessionStarted)

@@ -34,11 +34,10 @@ namespace UnityEngine.XR.iOS
 
 		void InitializeCommandBuffer()
 		{
-			m_VideoCommandBuffer = new CommandBuffer(); 
+			m_VideoCommandBuffer = new CommandBuffer();
 			m_VideoCommandBuffer.Blit(null, BuiltinRenderTextureType.CurrentActive, m_ClearMaterial);
 			GetComponent<Camera>().AddCommandBuffer(CameraEvent.BeforeForwardOpaque, m_VideoCommandBuffer);
-			bCommandBufferInitialized = true;
-
+            bCommandBufferInitialized = true;
 		}
 
 		void OnDestroy()
