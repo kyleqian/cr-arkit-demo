@@ -45,7 +45,7 @@ public class PrototypeAudioUI : MonoBehaviour
     // Call IndestructibleSceneTracker here because SceneManager.activeSceneChanged seems to be called in Awake
     void Start()
     {
-        if (IndestructibleSceneTracker.Instance.GetCountForSceneIndex(SceneManager.GetActiveScene().buildIndex) <= 1)
+        if (GlobalSceneTracker.Instance.GetCountForSceneIndex(SceneManager.GetActiveScene().buildIndex) <= 1)
         {
             audioSource.clip = clip1;
         }

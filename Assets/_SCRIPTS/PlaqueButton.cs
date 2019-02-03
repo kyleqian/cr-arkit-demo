@@ -15,7 +15,7 @@ public class PlaqueButton : MonoBehaviour
                 {
                     if (SceneManager.GetActiveScene().name == "Viewfinder")
                     {
-                        SceneManager.LoadScene("Letter", LoadSceneMode.Single);
+                        FindObjectOfType<ViewfinderUI>().ShowContentUI();
                     }
                     else
                     {

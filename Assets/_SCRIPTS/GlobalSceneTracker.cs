@@ -2,9 +2,9 @@
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
-public class IndestructibleSceneTracker : MonoBehaviour
+public class GlobalSceneTracker : MonoBehaviour
 {
-    public static IndestructibleSceneTracker Instance;
+    public static GlobalSceneTracker Instance;
     Dictionary<int, int> sceneCountDict = new Dictionary<int, int>();
 
     public int GetCountForSceneIndex(int index)
@@ -27,7 +27,13 @@ public class IndestructibleSceneTracker : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(this);
+        }
+    }
 
+    void Start()
+    {
+        if (Instance == this)
+        {
             sceneCountDict[SceneManager.GetActiveScene().buildIndex] = 1;
             SceneManager.activeSceneChanged += OnSceneChange;
         }
@@ -35,6 +41,10 @@ public class IndestructibleSceneTracker : MonoBehaviour
 
     void OnDestroy()
     {
-        SceneManager.activeSceneChanged -= OnSceneChange;
+        if (Instance == this)
+        {
+            Instance = null;
+            SceneManager.activeSceneChanged -= OnSceneChange;
+        }
     }
 }

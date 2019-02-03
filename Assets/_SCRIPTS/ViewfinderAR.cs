@@ -2,12 +2,10 @@
 using System.IO;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.XR.iOS;
 
-public class Viewfinder : MonoBehaviour
+public class ViewfinderAR : MonoBehaviour
 {
-    [Header("Worldmap & Model")]
     [SerializeField] string worldMapFilename;
     [SerializeField] string playerPrefScaleXKey;
     [SerializeField] string playerPrefScaleYKey;
@@ -16,22 +14,9 @@ public class Viewfinder : MonoBehaviour
     [SerializeField] float modelFadeInDuration;
     GameObject modelInstance;
 
-    [Header("Anchoring Mode")]
-    [Tooltip("UI elements that help the user anchor")]
-    [SerializeField] MaskableGraphic[] anchoringModeUIElements;
-    [SerializeField] float anchoringUIFadeOutDuration;
-
     string WorldMapPath
     {
         get { return Path.Combine(Application.persistentDataPath, worldMapFilename); }
-    }
-
-    void FadeOutAnchoringUIElements()
-    {
-        foreach (var elem in anchoringModeUIElements)
-        {
-            elem.CrossFadeAlpha(0, anchoringUIFadeOutDuration, false);
-        }
     }
 
     void FadeInModel()
@@ -44,29 +29,17 @@ public class Viewfinder : MonoBehaviour
         // Change rendering mode to "Fade" to fade properly
         UpdateModelRenderingMode(UtilitiesCR.BlendMode.Fade);
 
-        // Make model invisible
+        // Start with model fully transparent
         UpdateModelAlpha(0);
 
-        for (float t = 0.0f; t < 1.0; t += Time.deltaTime / modelFadeInDuration)
+        for (float alpha = 0.0f; alpha < 1.0; alpha += Time.deltaTime / modelFadeInDuration)
         {
-            UpdateModelAlpha(t);
+            UpdateModelAlpha(alpha);
             yield return null;
         }
 
         // Change rendering mode to "Opaque" to display without weird transparency issues
         UpdateModelRenderingMode(UtilitiesCR.BlendMode.Opaque);
-    }
-
-    void UpdateModelRenderingMode(UtilitiesCR.BlendMode blendMode)
-    {
-        foreach (Transform child in modelInstance.transform)
-        {
-            var renderer = child.GetComponent<Renderer>();
-            if (renderer.material.shader.name == "Standard")
-            {
-                UtilitiesCR.ChangeRenderMode(renderer.material, blendMode);
-            }
-        }
     }
 
     void UpdateModelAlpha(float newAlpha)
@@ -88,16 +61,24 @@ public class Viewfinder : MonoBehaviour
         }
     }
 
+    void UpdateModelRenderingMode(UtilitiesCR.BlendMode blendMode)
+    {
+        foreach (Transform child in modelInstance.transform)
+        {
+            var renderer = child.GetComponent<Renderer>();
+            if (renderer.material.shader.name == "Standard")
+            {
+                UtilitiesCR.ChangeRenderMode(renderer.material, blendMode);
+            }
+        }
+    }
+
     void UnityARSessionNativeInterface_ARUserAnchorAddedEvent(ARUserAnchor anchorData)
     {
         // Position model
         modelInstance.transform.position = UnityARMatrixOps.GetPosition(anchorData.transform);
         modelInstance.transform.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
         modelInstance.transform.localScale = new Vector3(PlayerPrefs.GetFloat(playerPrefScaleXKey), PlayerPrefs.GetFloat(playerPrefScaleYKey), PlayerPrefs.GetFloat(playerPrefScaleZKey));
-
-        // Fade out anchoring UI now that anchoring was achieved
-        FadeOutAnchoringUIElements();
-
 
         // Fade in newly placed model
         FadeInModel();
@@ -146,7 +127,6 @@ public class Viewfinder : MonoBehaviour
 
     void Start()
     {
-        Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.None);
         UnityARSessionNativeInterface.ARUserAnchorAddedEvent += UnityARSessionNativeInterface_ARUserAnchorAddedEvent;
         UnityARSessionNativeInterface.ARUserAnchorUpdatedEvent += UnityARSessionNativeInterface_ARUserAnchorUpdatedEvent;
         UnityARSessionNativeInterface.ARUserAnchorRemovedEvent += UnityARSessionNativeInterface_ARUserAnchorRemovedEvent;

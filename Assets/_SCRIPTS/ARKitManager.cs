@@ -60,7 +60,6 @@ public class ARKitManager : MonoBehaviour
     void Start()
     {
         Session = UnityARSessionNativeInterface.GetARSessionNativeInterface();
-        Application.targetFrameRate = 60;
         var config = DefaultSessionConfiguration;
         if (config.IsSupported)
         {
