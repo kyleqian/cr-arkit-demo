@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MainMenu : MonoBehaviour
+public class Root : MonoBehaviour
 {
-    public void LoadViewfinder()
+    public void LoadTitle()
     {
-        SceneManager.LoadScene("Viewfinder", LoadSceneMode.Single);
+        SceneManager.LoadScene("Title", LoadSceneMode.Single);
     }
 
     public void LoadCreatorMode()

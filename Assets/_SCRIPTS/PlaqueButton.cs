@@ -13,7 +13,14 @@ public class PlaqueButton : MonoBehaviour
             {
                 if (raycastHit.collider.name == name)
                 {
-                    SceneManager.LoadScene("PrototypeMode3", LoadSceneMode.Single);
+                    if (SceneManager.GetActiveScene().name == "Viewfinder")
+                    {
+                        SceneManager.LoadScene("Letter", LoadSceneMode.Single);
+                    }
+                    else
+                    {
+                        SceneManager.LoadScene("PrototypeMode3", LoadSceneMode.Single);
+                    }
                 }
             }
         }

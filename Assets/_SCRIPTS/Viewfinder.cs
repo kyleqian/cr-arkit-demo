@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR.iOS;
 
-public class ViewfinderManager : MonoBehaviour
+public class Viewfinder : MonoBehaviour
 {
     [Header("Worldmap & Model")]
     [SerializeField] string worldMapFilename;
@@ -16,9 +16,9 @@ public class ViewfinderManager : MonoBehaviour
     [SerializeField] float modelFadeInDuration;
     GameObject modelInstance;
 
-    [Header("Anchoring")]
+    [Header("Anchoring Mode")]
     [Tooltip("UI elements that help the user anchor")]
-    [SerializeField] MaskableGraphic[] anchoringUIElements;
+    [SerializeField] MaskableGraphic[] anchoringModeUIElements;
     [SerializeField] float anchoringUIFadeOutDuration;
 
     string WorldMapPath
@@ -28,7 +28,7 @@ public class ViewfinderManager : MonoBehaviour
 
     void FadeOutAnchoringUIElements()
     {
-        foreach (var elem in anchoringUIElements)
+        foreach (var elem in anchoringModeUIElements)
         {
             elem.CrossFadeAlpha(0, anchoringUIFadeOutDuration, false);
         }

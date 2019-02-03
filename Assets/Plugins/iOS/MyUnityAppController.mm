@@ -20,9 +20,10 @@
 {
     NSLog(@"MyUnityAppController Set audiosession");
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
+    // [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
+    [audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
     [audioSession setActive:YES error:nil];
-    [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:nil];
+    // [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:nil];
 }
 
 @end

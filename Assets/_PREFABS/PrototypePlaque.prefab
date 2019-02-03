@@ -38,7 +38,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4642034416967770}
   m_Layer: 0
-  m_Name: Plaque
+  m_Name: PrototypePlaque
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
