@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: b9e7377fabf3f4f008275720f1f62546
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Traveling _Typewriter
+  fontNames:
+  - Traveling _Typewriter
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 5362e263218ef482284d31941f09196c, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
