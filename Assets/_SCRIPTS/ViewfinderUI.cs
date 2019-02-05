@@ -7,6 +7,11 @@ public class ViewfinderUI : MonoBehaviour
     [SerializeField] AnchoringUI anchoringUI;
     [SerializeField] ContentUI contentUI;
 
+    public void HomeButton()
+    {
+        SceneManager.LoadScene("Title", LoadSceneMode.Single);
+    }
+
     public void ResetButton()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);

@@ -8,12 +8,18 @@ public class ContentUI : MonoBehaviour
     [SerializeField] GameObject text;
     [SerializeField] GameObject signature;
     [SerializeField] GameObject button;
-    [SerializeField] GameObject icon;
+    [SerializeField] GameObject volumeIcon;
+
+    [Header("Volume Icons")]
+    [SerializeField] GameObject volumeOn;
+    [SerializeField] GameObject volumeOff;
 
     [Header("Audio")]
     [SerializeField] AudioClip[] audioClips;
     AudioSource audioSource;
     Coroutine audioCoroutine;
+
+    const string VOLUME_ONOFF_KEY = "VOLUME_ONOFF_KEY";
 
     public void ShowSelf()
     {
@@ -26,9 +32,27 @@ public class ContentUI : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    public void ToggleVolume()
+    {
+        if (volumeOn.activeSelf)
+        {
+            volumeOn.SetActive(false);
+            volumeOff.SetActive(true);
+            audioSource.mute = true;
+            PlayerPrefs.SetInt(VOLUME_ONOFF_KEY, 0);
+        }
+        else
+        {
+            volumeOn.SetActive(true);
+            volumeOff.SetActive(false);
+            audioSource.mute = false;
+            PlayerPrefs.SetInt(VOLUME_ONOFF_KEY, 1);
+        }
+    }
+
     void OnAudioFinished()
     {
-        icon.SetActive(false);
+        volumeIcon.SetActive(false);
         text.SetActive(false);
         signature.SetActive(false);
         button.SetActive(true);
@@ -59,12 +83,21 @@ public class ContentUI : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
         gameObject.SetActive(false);
+        if (PlayerPrefs.GetInt(VOLUME_ONOFF_KEY, 1) == 0)
+        {
+            volumeOn.SetActive(false);
+            audioSource.mute = true;
+        }
+        else
+        {
+            volumeOff.SetActive(false);
+        }
     }
 
     void OnEnable()
     {
         button.SetActive(false);
-        icon.SetActive(true);
+        volumeIcon.SetActive(true);
         text.SetActive(true);
         signature.SetActive(true);
         audioCoroutine = StartCoroutine(PlayAudio());
