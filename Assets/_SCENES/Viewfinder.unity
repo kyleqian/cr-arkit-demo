@@ -1649,7 +1649,7 @@ MonoBehaviour:
   playerPrefScaleXKey: Plaque_ScaleX
   playerPrefScaleYKey: Plaque_ScaleY
   playerPrefScaleZKey: Plaque_ScaleZ
-  modelPrefab: {fileID: 1524608126972618, guid: 9134e894180184c5486b3df958ab7d98,
+  modelPrefab: {fileID: 1281363382101276, guid: 87842ee7bf84243dd8a6aa0bcb3d7e5a,
     type: 2}
   modelFadeInDuration: 2
 --- !u!114 &1198602767

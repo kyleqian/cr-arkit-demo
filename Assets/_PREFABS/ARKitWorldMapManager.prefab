@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e92d8c62b6cee4f879785f2588b97c89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  plaquePrefab: {fileID: 1524608126972618, guid: 9134e894180184c5486b3df958ab7d98,
+  plaquePrefab: {fileID: 1281363382101276, guid: 87842ee7bf84243dd8a6aa0bcb3d7e5a,
     type: 2}
   statuePrefab: {fileID: 1592397139322440, guid: c73eaf66e29bf48539b2275b866b7f50,
     type: 2}
@@ -64,5 +64,5 @@ MonoBehaviour:
   collisionLayer:
     serializedVersion: 2
     m_Bits: 1024
-  PointCloud: {fileID: 0}
+  PointCloudGenerator: {fileID: 0}
   ScreenUI: {fileID: 0}

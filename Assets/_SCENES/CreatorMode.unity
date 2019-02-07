@@ -834,19 +834,14 @@ Prefab:
       objectReference: {fileID: 338546212}
     - target: {fileID: 114859422087682938, guid: dac39d4d3cc544e5f96e8029eb9c3685,
         type: 2}
-      propertyPath: PointCloud
+      propertyPath: PointCloudGenerator
       value: 
-      objectReference: {fileID: 481742511}
+      objectReference: {fileID: 481742513}
     - target: {fileID: 114859422087682938, guid: dac39d4d3cc544e5f96e8029eb9c3685,
         type: 2}
       propertyPath: ScreenUI
       value: 
       objectReference: {fileID: 11369356}
-    - target: {fileID: 114859422087682938, guid: dac39d4d3cc544e5f96e8029eb9c3685,
-        type: 2}
-      propertyPath: PointCloudGenerator
-      value: 
-      objectReference: {fileID: 481742513}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dac39d4d3cc544e5f96e8029eb9c3685, type: 2}
   m_IsPrefabAsset: 0
