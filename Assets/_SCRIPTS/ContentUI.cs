@@ -1,17 +1,19 @@
 ﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class ContentUI : MonoBehaviour
 {
     [Header("UI Elements")]
-    [SerializeField] GameObject text;
+    [SerializeField] TextMeshProUGUI text;
+    [SerializeField] TextMeshProUGUI signature;
     [SerializeField] GameObject volumeOn;
     [SerializeField] GameObject volumeOff;
     [SerializeField] RectTransform canvasTransform;
 
-    [Header("Audio")]
-    [SerializeField] AudioClip[] audioClips;
+    [Header("Voices")]
+    [SerializeField] Voice[] voices;
 
     [Header("Animations")]
     [SerializeField] AnimationCurve canvasEaseCurve;
@@ -110,23 +112,48 @@ public class ContentUI : MonoBehaviour
 
     IEnumerator PlayAudio()
     {
-        // Call IndestructibleSceneTracker here because SceneManager.activeSceneChanged seems to be called in Awake
-        // UPDATE TO USE SCRITABLEOBJECTS
-        if (GlobalSceneTracker.Instance.GetCountForSceneIndex(SceneManager.GetActiveScene().buildIndex) <= 1)
-        {
-            audioSource.clip = audioClips[0];
-        }
-        else
-        {
-            audioSource.clip = audioClips[1];
-        }
+        // TODO: Selection method
+        audioSource.clip = voices[0].recording;
 
         // Delay
         yield return new WaitForSeconds(3);
 
         // Play audio
         audioSource.Play();
-        Invoke("OnAudioFinished", audioSource.clip.length + 3.0f);
+        StartCoroutine(PlayTranscription());
+        Invoke("OnAudioFinished", audioSource.clip.length + 2.0f);
+    }
+
+    IEnumerator PlayTranscription()
+    {
+        for (int i = 0; i < voices[0].timestamps.Length; ++i)
+        {
+            if (i > 0)
+            {
+                yield return new WaitForSeconds(voices[0].timestamps[i] - voices[0].timestamps[i - 1]);
+            }
+            StartCoroutine(FadeReplaceText(voices[0].transcriptions[i], 0.5f));
+        }
+    }
+
+    IEnumerator FadeReplaceText(string newText, float speed)
+    {
+        // Fade out
+        for (float t = 1f; t > 0f; t -= Time.deltaTime / speed)
+        {
+            text.alpha = t;
+            yield return null;
+        }
+
+        // Replace text
+        text.text = newText;
+
+        // Fade in
+        for (float t = 0f; t < 1f; t += Time.deltaTime / speed)
+        {
+            text.alpha = t;
+            yield return null;
+        }
     }
 
     void Awake()
@@ -134,6 +161,8 @@ public class ContentUI : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         canvasTransform.gameObject.SetActive(false);
         canvasTransformInitialPosition = canvasTransform.position;
+        signature.text = "- " + voices[0].signature;
+        text.text = "";
         if (PlayerPrefs.GetInt(VOLUME_ONOFF_KEY, 1) == 0)
         {
             volumeOn.SetActive(false);

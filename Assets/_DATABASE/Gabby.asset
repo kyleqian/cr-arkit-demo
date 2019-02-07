@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46bb88197068e4ce6bf0345205857b89, type: 3}
+  m_Name: Gabby
+  m_EditorClassIdentifier: 
+  signature: Stanford Senior ('19)
+  recording: {fileID: 8300000, guid: f05058be2fb7e46c59edeae5febb368b, type: 3}
+  timestamps:
+  - 0
+  - 5
+  - 10
+  - 15
+  - 22
+  - 33
+  - 39
+  - 49
+  - 56
+  transcriptions:
+  - The only time that I've ever really engaged with the memorial was in the spring.
+  - I think I went to Endless KA [Kappa Alpha] and that was the first time that I
+    had seen it or heard about it.
+  - And I remember making some sort  of comment like... this is great that it's here
+    but...
+  - There are a bunch of drunk kids walking all over it and have no idea what it means,
+    or what it stands for, or why it's here.
+  - The generation of Stanford students that are 4, 5, 10 years removed from our generation
+    aren't going to have that same kind of connection to the Brock Turner case.
+  - I don't think they're going to have as much connection to what happened because
+    it's not as close to them.
+  - So I think in that regard, I think a plaque is almost necessary to have some sort
+    of literary reminder.
+  - Rather than just a pond that looks pretty from the outside.
+  - 

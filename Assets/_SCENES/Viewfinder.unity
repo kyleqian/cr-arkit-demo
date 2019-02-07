@@ -416,7 +416,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -2.9003906, y: -17.8}
+  m_AnchoredPosition: {x: -2.9003906, y: -31}
   m_SizeDelta: {x: 586, y: 104.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &312622277
@@ -466,14 +466,14 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 42.8
-  m_fontSizeBase: 42.8
+  m_fontSize: 35
+  m_fontSizeBase: 35
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_textAlignment: 258
+  m_textAlignment: 514
   m_isAlignmentEnumConverted: 1
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -484,7 +484,7 @@ MonoBehaviour:
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
-  m_firstOverflowCharacterIndex: 26
+  m_firstOverflowCharacterIndex: -1
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
   m_isTextTruncated: 0
@@ -798,7 +798,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -2.9003906, y: -165}
+  m_AnchoredPosition: {x: -2.9003906, y: -214.7}
   m_SizeDelta: {x: 468, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &488213434
@@ -2733,13 +2733,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 292941a1deb6143818c1ea6f924e2b67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 312622275}
+  text: {fileID: 312622277}
+  signature: {fileID: 488213434}
   volumeOn: {fileID: 1886459653}
   volumeOff: {fileID: 354131521}
   canvasTransform: {fileID: 347399529}
-  audioClips:
-  - {fileID: 8300000, guid: 39efac4432169446caf5394c2df881a5, type: 3}
-  - {fileID: 8300000, guid: f05058be2fb7e46c59edeae5febb368b, type: 3}
+  voices:
+  - {fileID: 11400000, guid: 0a7a6ef8f462446cfba3aaeaeb243510, type: 2}
   canvasEaseCurve:
     serializedVersion: 2
     m_Curve:
