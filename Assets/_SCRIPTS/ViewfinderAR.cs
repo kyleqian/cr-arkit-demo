@@ -44,16 +44,26 @@ public class ViewfinderAR : MonoBehaviour
 
     void UpdateModelAlpha(float newAlpha)
     {
-        foreach (Transform child in modelInstance.transform)
+        UpdateAlphaRecursive(modelInstance.transform, newAlpha);
+    }
+
+    void UpdateAlphaRecursive(Transform target, float newAlpha)
+    {
+        foreach (Transform child in target.transform)
         {
-            var tmpro = child.GetComponent<TextMeshPro>();
-            if (tmpro != null)
+            UpdateAlphaRecursive(child, newAlpha);
+        }
+
+        var tmpro = target.GetComponent<TextMeshPro>();
+        if (tmpro != null)
+        {
+            tmpro.alpha = newAlpha;
+        }
+        else
+        {
+            Renderer renderer = target.GetComponent<Renderer>();
+            if (renderer != null)
             {
-                tmpro.alpha = newAlpha;
-            }
-            else
-            {
-                Renderer renderer = child.GetComponent<Renderer>();
                 Color newColor = renderer.material.color;
                 newColor.a = newAlpha;
                 renderer.material.color = newColor;
@@ -63,13 +73,20 @@ public class ViewfinderAR : MonoBehaviour
 
     void UpdateModelRenderingMode(UtilitiesCR.BlendMode blendMode)
     {
-        foreach (Transform child in modelInstance.transform)
+        UpdateRenderingModeRecursive(modelInstance.transform, blendMode);
+    }
+
+    void UpdateRenderingModeRecursive(Transform target, UtilitiesCR.BlendMode blendMode)
+    {
+        foreach (Transform child in target.transform)
         {
-            var renderer = child.GetComponent<Renderer>();
-            if (renderer.material.shader.name == "Standard")
-            {
-                UtilitiesCR.ChangeRenderMode(renderer.material, blendMode);
-            }
+            UpdateRenderingModeRecursive(child, blendMode);
+        }
+
+        Renderer renderer = target.GetComponent<Renderer>();
+        if (renderer != null && renderer.material.shader.name == "Standard")
+        {
+            UtilitiesCR.ChangeRenderMode(renderer.material, blendMode);
         }
     }
 
