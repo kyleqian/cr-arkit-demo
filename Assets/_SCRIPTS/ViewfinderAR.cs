@@ -64,9 +64,12 @@ public class ViewfinderAR : MonoBehaviour
             Renderer renderer = target.GetComponent<Renderer>();
             if (renderer != null)
             {
-                Color newColor = renderer.material.color;
-                newColor.a = newAlpha;
-                renderer.material.color = newColor;
+                foreach (Material m in renderer.materials)
+                {
+                    Color newColor = m.color;
+                    newColor.a = newAlpha;
+                    m.color = newColor;
+                }
             }
         }
     }
@@ -84,9 +87,15 @@ public class ViewfinderAR : MonoBehaviour
         }
 
         Renderer renderer = target.GetComponent<Renderer>();
-        if (renderer != null && renderer.material.shader.name == "Standard")
+        if (renderer != null)
         {
-            UtilitiesCR.ChangeRenderMode(renderer.material, blendMode);
+            foreach (Material m in renderer.materials)
+            {
+                if (m.shader.name == "Standard")
+                {
+                    UtilitiesCR.ChangeRenderMode(m, blendMode);
+                }
+            }
         }
     }
 
