@@ -1,6 +1,14 @@
 ﻿using System.IO;
 using UnityEngine;
 
+public enum BlendMode
+{
+    Opaque,
+    Cutout,
+    Fade,
+    Transparent
+}
+
 public static class UtilitiesCR
 {
     static public Sprite LoadNewSprite(string path, float pixelsPerUnit = 100.0f)
@@ -29,14 +37,6 @@ public static class UtilitiesCR
         }
         // Return null if load failed
         return null;
-    }
-
-    public enum BlendMode
-    {
-        Opaque,
-        Cutout,
-        Fade,
-        Transparent
     }
 
     public static void ChangeRenderMode(Material standardShaderMaterial, BlendMode blendMode)

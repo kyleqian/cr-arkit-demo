@@ -17,12 +17,6 @@ public class ViewfinderUI : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
     }
 
-    // Extra level of indirection because ContentUI cannot be found with Find() if it's disabled
-    public void ShowContentUI()
-    {
-        contentUI.ShowSelf();
-    }
-
     void UnityARSessionNativeInterface_ARUserAnchorAddedEvent(ARUserAnchor anchorData)
     {
         // Hide anchoring canvas now that anchoring was achieved

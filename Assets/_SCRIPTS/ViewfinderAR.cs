@@ -27,7 +27,7 @@ public class ViewfinderAR : MonoBehaviour
     IEnumerator FadeInModelCoroutine()
     {
         // Change rendering mode to "Fade" to fade properly
-        UpdateModelRenderingMode(UtilitiesCR.BlendMode.Fade);
+        UpdateModelRenderingMode(BlendMode.Fade);
 
         // Start with model fully transparent
         UpdateModelAlpha(0);
@@ -39,7 +39,7 @@ public class ViewfinderAR : MonoBehaviour
         }
 
         // Change rendering mode to "Opaque" to display without weird transparency issues
-        UpdateModelRenderingMode(UtilitiesCR.BlendMode.Opaque);
+        UpdateModelRenderingMode(BlendMode.Opaque);
     }
 
     void UpdateModelAlpha(float newAlpha)
@@ -71,12 +71,12 @@ public class ViewfinderAR : MonoBehaviour
         }
     }
 
-    void UpdateModelRenderingMode(UtilitiesCR.BlendMode blendMode)
+    void UpdateModelRenderingMode(BlendMode blendMode)
     {
         UpdateRenderingModeRecursive(modelInstance.transform, blendMode);
     }
 
-    void UpdateRenderingModeRecursive(Transform target, UtilitiesCR.BlendMode blendMode)
+    void UpdateRenderingModeRecursive(Transform target, BlendMode blendMode)
     {
         foreach (Transform child in target.transform)
         {

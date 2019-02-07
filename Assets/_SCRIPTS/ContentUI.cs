@@ -6,30 +6,60 @@ public class ContentUI : MonoBehaviour
 {
     [Header("UI Elements")]
     [SerializeField] GameObject text;
-    [SerializeField] GameObject signature;
-    [SerializeField] GameObject button;
-    [SerializeField] GameObject volumeIcon;
-
-    [Header("Volume Icons")]
     [SerializeField] GameObject volumeOn;
     [SerializeField] GameObject volumeOff;
+    [SerializeField] RectTransform canvasTransform;
 
     [Header("Audio")]
     [SerializeField] AudioClip[] audioClips;
-    AudioSource audioSource;
-    Coroutine audioCoroutine;
+
+    [Header("Animations")]
+    [SerializeField] AnimationCurve canvasEaseCurve;
 
     const string VOLUME_ONOFF_KEY = "VOLUME_ONOFF_KEY";
 
+    AudioSource audioSource;
+    Coroutine audioCoroutine;
+    Vector3 canvasTransformInitialPosition;
+
     public void ShowSelf()
     {
-        // TODO: Make sure this isn't called multiple times.
-        gameObject.SetActive(true);
+        if (canvasTransform.gameObject.activeSelf)
+        {
+            return;
+        }
+
+        // Start below screen
+        Vector3 newPosition = canvasTransformInitialPosition;
+        newPosition.y -= canvasTransform.rect.height;
+        canvasTransform.position = newPosition;
+
+        // Play audio
+        audioCoroutine = StartCoroutine(PlayAudio());
+
+        // Ease in
+        StartCoroutine(EaseCanvas(true, 1.5f));
     }
 
     public void HideSelf()
     {
-        gameObject.SetActive(false);
+        if (!canvasTransform.gameObject.activeSelf)
+        {
+            return;
+        }
+
+        // Start above screen
+        canvasTransform.position = canvasTransformInitialPosition;
+
+        // Stop audio
+        if (audioCoroutine != null)
+        {
+            StopCoroutine(audioCoroutine);
+        }
+        audioSource.Stop();
+
+        // Ease out
+        StartCoroutine(EaseCanvas(false, 1.5f));
     }
 
     public void ToggleVolume()
@@ -50,12 +80,32 @@ public class ContentUI : MonoBehaviour
         }
     }
 
+    IEnumerator EaseCanvas(bool easeIn, float duration)
+    {
+        if (easeIn)
+        {
+            canvasTransform.gameObject.SetActive(true);
+        }
+
+        float startingY = canvasTransform.position.y;
+        float targetY = easeIn ? canvasTransformInitialPosition.y : canvasTransformInitialPosition.y - canvasTransform.rect.height;
+        for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / duration)
+        {
+            Vector3 newPosition = canvasTransform.position;
+            newPosition.y = (targetY - startingY) * canvasEaseCurve.Evaluate(t) + startingY;
+            canvasTransform.position = newPosition;
+            yield return null;
+        }
+
+        if (!easeIn)
+        {
+            canvasTransform.gameObject.SetActive(false);
+        }
+    }
+
     void OnAudioFinished()
     {
-        volumeIcon.SetActive(false);
-        text.SetActive(false);
-        signature.SetActive(false);
-        button.SetActive(true);
+        HideSelf();
     }
 
     IEnumerator PlayAudio()
@@ -72,7 +122,7 @@ public class ContentUI : MonoBehaviour
         }
 
         // Delay
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(5);
 
         // Play audio
         audioSource.Play();
@@ -82,7 +132,8 @@ public class ContentUI : MonoBehaviour
     void Awake()
     {
         audioSource = GetComponent<AudioSource>();
-        gameObject.SetActive(false);
+        canvasTransform.gameObject.SetActive(false);
+        canvasTransformInitialPosition = canvasTransform.position;
         if (PlayerPrefs.GetInt(VOLUME_ONOFF_KEY, 1) == 0)
         {
             volumeOn.SetActive(false);
@@ -92,23 +143,5 @@ public class ContentUI : MonoBehaviour
         {
             volumeOff.SetActive(false);
         }
-    }
-
-    void OnEnable()
-    {
-        button.SetActive(false);
-        volumeIcon.SetActive(true);
-        text.SetActive(true);
-        signature.SetActive(true);
-        audioCoroutine = StartCoroutine(PlayAudio());
-    }
-
-    void OnDisable()
-    {
-        if (audioCoroutine != null)
-        {
-            StopCoroutine(audioCoroutine);
-        }
-        audioSource.Stop();
     }
 }
