@@ -122,11 +122,11 @@ public class ContentUI : MonoBehaviour
         }
 
         // Delay
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(3);
 
         // Play audio
         audioSource.Play();
-        Invoke("OnAudioFinished", audioSource.clip.length);
+        Invoke("OnAudioFinished", audioSource.clip.length + 3.0f);
     }
 
     void Awake()

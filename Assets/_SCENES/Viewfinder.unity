@@ -1666,6 +1666,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anchoringUI: {fileID: 581950267}
   contentUI: {fileID: 2145775664}
+  letterColliderParentName: letter
 --- !u!1001 &1308365991
 Prefab:
   m_ObjectHideFlags: 0

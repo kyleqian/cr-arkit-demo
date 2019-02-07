@@ -6,6 +6,7 @@ public class ViewfinderUI : MonoBehaviour
 {
     [SerializeField] AnchoringUI anchoringUI;
     [SerializeField] ContentUI contentUI;
+    [SerializeField] string letterColliderParentName;
 
     public void HomeButton()
     {
@@ -23,9 +24,30 @@ public class ViewfinderUI : MonoBehaviour
         anchoringUI.FadeOut();
     }
 
+    void DetectLetterTouch()
+    {
+        if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began)
+        {
+            Ray raycast = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
+            RaycastHit raycastHit;
+            if (Physics.Raycast(raycast, out raycastHit))
+            {
+                if (raycastHit.collider.transform.parent.name == letterColliderParentName)
+                {
+                    contentUI.ShowSelf();
+                }
+            }
+        }
+    }
+
     void Start()
     {
         UnityARSessionNativeInterface.ARUserAnchorAddedEvent += UnityARSessionNativeInterface_ARUserAnchorAddedEvent;
+    }
+
+    void Update()
+    {
+        DetectLetterTouch();
     }
 
     void OnDestroy()
