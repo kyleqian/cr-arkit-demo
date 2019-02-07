@@ -302,8 +302,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 37, y: -16}
-  m_SizeDelta: {x: 459.3, y: 169.3}
+  m_AnchoredPosition: {x: 96.3, y: -9.2}
+  m_SizeDelta: {x: 508.3, y: 169.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &975581541
 MonoBehaviour:
@@ -324,7 +324,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: Remember Emily Doe
+  m_text: Emily Doe Garden
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1ae3c651bd1424926b692bf4c17cef97, type: 2}
   m_sharedMaterial: {fileID: 21567407692046304, guid: 1ae3c651bd1424926b692bf4c17cef97,
@@ -352,8 +352,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 43.5
-  m_fontSizeBase: 43.5
+  m_fontSize: 53
+  m_fontSizeBase: 53
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -393,7 +393,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 975581541}
-    characterCount: 18
+    characterCount: 16
     spriteCount: 0
     spaceCount: 2
     wordCount: 3
