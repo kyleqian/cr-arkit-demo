@@ -6,7 +6,6 @@ public class ViewfinderUI : MonoBehaviour
 {
     [SerializeField] AnchoringUI anchoringUI;
     [SerializeField] ContentUI contentUI;
-    [SerializeField] string letterColliderParentName;
 
     public void HomeButton()
     {
@@ -32,7 +31,7 @@ public class ViewfinderUI : MonoBehaviour
             RaycastHit raycastHit;
             if (Physics.Raycast(raycast, out raycastHit))
             {
-                if (raycastHit.collider.transform.parent.name == letterColliderParentName)
+                if (raycastHit.collider.tag == "LetterCups")
                 {
                     contentUI.ShowSelf();
                 }
