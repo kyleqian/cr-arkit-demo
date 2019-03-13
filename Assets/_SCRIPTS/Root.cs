@@ -32,4 +32,9 @@ public class Root : MonoBehaviour
     {
         SceneManager.LoadScene("Sandbox", LoadSceneMode.Single);
     }
+
+    public void ClearPlayerPrefs()
+    {
+        PlayerPrefs.DeleteAll();
+    }
 }

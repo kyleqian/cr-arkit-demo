@@ -1810,7 +1810,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: 0/4
+  m_text: n/a
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1ae3c651bd1424926b692bf4c17cef97, type: 2}
   m_sharedMaterial: {fileID: 21567407692046304, guid: 1ae3c651bd1424926b692bf4c17cef97,
@@ -2749,7 +2749,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec2d809a3e8c34094bd35c2b8adc58d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trackerText: {fileID: 1724635539}
+  trackerInfo: {fileID: 2098575459}
+  trackerCount: {fileID: 1010051456}
 --- !u!114 &1604379767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3683,7 +3684,7 @@ GameObject:
   - component: {fileID: 2098575462}
   - component: {fileID: 2098575461}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Info
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3936,8 +3937,6 @@ MonoBehaviour:
   volumeOn: {fileID: 1886459653}
   volumeOff: {fileID: 354131521}
   canvasTransform: {fileID: 347399529}
-  voices:
-  - {fileID: 11400000, guid: 0a7a6ef8f462446cfba3aaeaeb243510, type: 2}
   canvasEaseCurve:
     serializedVersion: 2
     m_Curve:

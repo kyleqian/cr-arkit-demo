@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GlobalDatabase : MonoBehaviour
 {
     public static GlobalDatabase Instance;
+    public UnityEvent DatabaseUpdated;
 
     [SerializeField] Voice[] voices;
 
@@ -13,8 +14,18 @@ public class GlobalDatabase : MonoBehaviour
         return Array.Find(voices, v => v.name == name);
     }
 
-    public void GetVoiceCounts()
-    { }
+    public Tuple<int, int> GetVoiceCounts()
+    {
+        int completedCount = 0;
+        foreach (Voice v in voices)
+        {
+            if (PlayerPrefs.HasKey(v.GetPlayerPrefKey()))
+            {
+                ++completedCount;
+            }
+        }
+        return new Tuple<int, int>(completedCount, voices.Length);
+    }
 
     void Awake()
     {

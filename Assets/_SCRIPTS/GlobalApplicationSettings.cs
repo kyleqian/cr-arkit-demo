@@ -7,18 +7,6 @@ public class GlobalApplicationSettings : MonoBehaviour
 
     int initialSleepTimeout;
 
-    void OnSceneChange(Scene current, Scene next)
-    {
-        if (next.name == "Viewfinder")
-        {
-            Screen.sleepTimeout = SleepTimeout.NeverSleep;
-        }
-        else
-        {
-            Screen.sleepTimeout = initialSleepTimeout;
-        }
-    }
-
     void Awake()
     {
         if (Instance == null)
@@ -45,6 +33,18 @@ public class GlobalApplicationSettings : MonoBehaviour
         {
             Instance = null;
             SceneManager.activeSceneChanged -= OnSceneChange;
+        }
+    }
+
+    void OnSceneChange(Scene current, Scene next)
+    {
+        if (next.name == "Viewfinder")
+        {
+            Screen.sleepTimeout = SleepTimeout.NeverSleep;
+        }
+        else
+        {
+            Screen.sleepTimeout = initialSleepTimeout;
         }
     }
 }

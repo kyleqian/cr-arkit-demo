@@ -134,6 +134,7 @@ public class ContentUI : MonoBehaviour
 
         // Remember that the user has completed this Voice
         PlayerPrefs.SetInt(activeVoice.GetPlayerPrefKey(), 1);
+        GlobalDatabase.Instance.DatabaseUpdated.Invoke();
 
         HideSelf();
     }
