@@ -15,7 +15,7 @@ public class PlaqueButton : MonoBehaviour
                 {
                     if (SceneManager.GetActiveScene().name == "Viewfinder")
                     {
-                        FindObjectOfType<ContentUI>().ShowSelf();
+                        FindObjectOfType<ContentUI>().ShowSelf(GlobalDatabase.Instance.FindVoiceByName("Gabby"));
                     }
                     else
                     {

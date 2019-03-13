@@ -17,6 +17,21 @@ public class ViewfinderUI : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
     }
 
+    void Start()
+    {
+        UnityARSessionNativeInterface.ARUserAnchorAddedEvent += UnityARSessionNativeInterface_ARUserAnchorAddedEvent;
+    }
+
+    void Update()
+    {
+        DetectLetterTouch();
+    }
+
+    void OnDestroy()
+    {
+        UnityARSessionNativeInterface.ARUserAnchorAddedEvent -= UnityARSessionNativeInterface_ARUserAnchorAddedEvent;
+    }
+
     void UnityARSessionNativeInterface_ARUserAnchorAddedEvent(ARUserAnchor anchorData)
     {
         // Hide anchoring canvas now that anchoring was achieved
@@ -31,26 +46,19 @@ public class ViewfinderUI : MonoBehaviour
             RaycastHit raycastHit;
             if (Physics.Raycast(raycast, out raycastHit))
             {
-                if (raycastHit.collider.tag == "LetterCups")
+                switch (raycastHit.collider.tag)
                 {
-                    contentUI.ShowSelf();
+                    case "LetterCups":
+                        contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("Gabby"));
+                        break;
+                    case "LetterFlashlight":
+                        break;
+                    case "LetterFlower":
+                        break;
+                    case "LetterPlaque":
+                        break;
                 }
             }
         }
-    }
-
-    void Start()
-    {
-        UnityARSessionNativeInterface.ARUserAnchorAddedEvent += UnityARSessionNativeInterface_ARUserAnchorAddedEvent;
-    }
-
-    void Update()
-    {
-        DetectLetterTouch();
-    }
-
-    void OnDestroy()
-    {
-        UnityARSessionNativeInterface.ARUserAnchorAddedEvent -= UnityARSessionNativeInterface_ARUserAnchorAddedEvent;
     }
 }

@@ -27,4 +27,9 @@ public class Root : MonoBehaviour
     {
         SceneManager.LoadScene("TestGPS", LoadSceneMode.Single);
     }
+
+    public void LoadSandbox()
+    {
+        SceneManager.LoadScene("Sandbox", LoadSceneMode.Single);
+    }
 }

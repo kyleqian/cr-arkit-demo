@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class ContentUI : MonoBehaviour
 {
@@ -12,24 +11,26 @@ public class ContentUI : MonoBehaviour
     [SerializeField] GameObject volumeOff;
     [SerializeField] RectTransform canvasTransform;
 
-    [Header("Voices")]
-    [SerializeField] Voice[] voices;
-
     [Header("Animations")]
     [SerializeField] AnimationCurve canvasEaseCurve;
 
     const string VOLUME_ONOFF_KEY = "VOLUME_ONOFF_KEY";
 
+    bool currentlyActive;
+    Voice activeVoice;
     AudioSource audioSource;
-    Coroutine audioCoroutine;
+    Coroutine audioFinishCoroutine;
+    Coroutine transcriptionCoroutine;
     Vector3 canvasTransformInitialPosition;
 
-    public void ShowSelf()
+    public void ShowSelf(Voice voice)
     {
-        if (canvasTransform.gameObject.activeSelf)
+        if (currentlyActive)
         {
             return;
         }
+        currentlyActive = true;
+        activeVoice = voice;
 
         // Start below screen
         Vector3 newPosition = canvasTransformInitialPosition;
@@ -37,7 +38,7 @@ public class ContentUI : MonoBehaviour
         canvasTransform.position = newPosition;
 
         // Play audio
-        audioCoroutine = StartCoroutine(PlayAudio());
+        StartCoroutine(PlayAudio());
 
         // Ease in
         StartCoroutine(EaseCanvas(true, 1.5f));
@@ -45,20 +46,20 @@ public class ContentUI : MonoBehaviour
 
     public void HideSelf()
     {
-        if (!canvasTransform.gameObject.activeSelf)
+        if (!currentlyActive)
         {
             return;
         }
+        currentlyActive = false;
+        activeVoice = null;
+
+        // Stop all audio playback and related coroutines
+        audioSource.Stop();
+        StopCoroutine(audioFinishCoroutine);
+        StopCoroutine(transcriptionCoroutine);
 
         // Start above screen
         canvasTransform.position = canvasTransformInitialPosition;
-
-        // Stop audio
-        if (audioCoroutine != null)
-        {
-            StopCoroutine(audioCoroutine);
-        }
-        audioSource.Stop();
 
         // Ease out
         StartCoroutine(EaseCanvas(false, 1.5f));
@@ -80,6 +81,28 @@ public class ContentUI : MonoBehaviour
             audioSource.mute = false;
             PlayerPrefs.SetInt(VOLUME_ONOFF_KEY, 1);
         }
+    }
+
+    void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+        canvasTransform.gameObject.SetActive(false);
+        canvasTransformInitialPosition = canvasTransform.position;
+        if (PlayerPrefs.GetInt(VOLUME_ONOFF_KEY, 1) == 0)
+        {
+            volumeOn.SetActive(false);
+            audioSource.mute = true;
+        }
+        else
+        {
+            volumeOff.SetActive(false);
+        }
+    }
+
+    void OnEnable()
+    {
+        text.text = "";
+        signature.text = "- " + activeVoice.signature;
     }
 
     IEnumerator EaseCanvas(bool easeIn, float duration)
@@ -105,34 +128,36 @@ public class ContentUI : MonoBehaviour
         }
     }
 
-    void OnAudioFinished()
+    IEnumerator OnAudioFinished(float delay)
     {
+        yield return new WaitForSeconds(delay);
+
+        // Remember that the user has completed this Voice
+        PlayerPrefs.SetInt(activeVoice.GetPlayerPrefKey(), 1);
+
         HideSelf();
     }
 
     IEnumerator PlayAudio()
     {
-        // TODO: Selection method
-        audioSource.clip = voices[0].recording;
+        audioSource.clip = activeVoice.recording;
 
-        // Delay
         yield return new WaitForSeconds(3);
 
-        // Play audio
         audioSource.Play();
-        StartCoroutine(PlayTranscription());
-        Invoke("OnAudioFinished", audioSource.clip.length + 2.0f);
+        transcriptionCoroutine = StartCoroutine(PlayTranscription());
+        audioFinishCoroutine = StartCoroutine(OnAudioFinished(audioSource.clip.length + 2.0f));
     }
 
     IEnumerator PlayTranscription()
     {
-        for (int i = 0; i < voices[0].timestamps.Length; ++i)
+        for (int i = 0; i < activeVoice.timestamps.Length; ++i)
         {
             if (i > 0)
             {
-                yield return new WaitForSeconds(voices[0].timestamps[i] - voices[0].timestamps[i - 1]);
+                yield return new WaitForSeconds(activeVoice.timestamps[i] - activeVoice.timestamps[i - 1]);
             }
-            StartCoroutine(FadeReplaceText(voices[0].transcriptions[i], 0.5f));
+            StartCoroutine(FadeReplaceText(activeVoice.transcriptions[i], 0.5f));
         }
     }
 
@@ -153,24 +178,6 @@ public class ContentUI : MonoBehaviour
         {
             text.alpha = t;
             yield return null;
-        }
-    }
-
-    void Awake()
-    {
-        audioSource = GetComponent<AudioSource>();
-        canvasTransform.gameObject.SetActive(false);
-        canvasTransformInitialPosition = canvasTransform.position;
-        signature.text = "- " + voices[0].signature;
-        text.text = "";
-        if (PlayerPrefs.GetInt(VOLUME_ONOFF_KEY, 1) == 0)
-        {
-            volumeOn.SetActive(false);
-            audioSource.mute = true;
-        }
-        else
-        {
-            volumeOff.SetActive(false);
         }
     }
 }

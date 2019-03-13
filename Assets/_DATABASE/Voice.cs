@@ -7,4 +7,9 @@ public class Voice : ScriptableObject
     public AudioClip recording;
     public float[] timestamps;
     public string[] transcriptions;
+
+    public string GetPlayerPrefKey()
+    {
+        return name + "_KEY";
+    }
 }
