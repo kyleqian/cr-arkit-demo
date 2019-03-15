@@ -34,7 +34,7 @@ public class ViewfinderUI : MonoBehaviour
 
     void UnityARSessionNativeInterface_ARUserAnchorAddedEvent(ARUserAnchor anchorData)
     {
-        // Hide anchoring canvas now that anchoring was achieved
+        // Hide anchoring canvas now that anchoring is achieved
         anchoringUI.FadeOut();
     }
 

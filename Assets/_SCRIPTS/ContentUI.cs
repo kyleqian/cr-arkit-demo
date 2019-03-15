@@ -31,14 +31,16 @@ public class ContentUI : MonoBehaviour
         }
         currentlyActive = true;
         activeVoice = voice;
+        text.text = "";
+        signature.text = "- " + activeVoice.signature;
 
         // Start below screen
         Vector3 newPosition = canvasTransformInitialPosition;
         newPosition.y -= canvasTransform.rect.height;
         canvasTransform.position = newPosition;
 
-        // Play audio
-        StartCoroutine(PlayAudio());
+        // Play audio and transcription
+        StartCoroutine(PlayAudioAndTranscription());
 
         // Ease in
         StartCoroutine(EaseCanvas(true, 1.5f));
@@ -99,12 +101,6 @@ public class ContentUI : MonoBehaviour
         }
     }
 
-    void OnEnable()
-    {
-        text.text = "";
-        signature.text = "- " + activeVoice.signature;
-    }
-
     IEnumerator EaseCanvas(bool easeIn, float duration)
     {
         if (easeIn)
@@ -139,7 +135,7 @@ public class ContentUI : MonoBehaviour
         HideSelf();
     }
 
-    IEnumerator PlayAudio()
+    IEnumerator PlayAudioAndTranscription()
     {
         audioSource.clip = activeVoice.recording;
 
@@ -147,7 +143,7 @@ public class ContentUI : MonoBehaviour
 
         audioSource.Play();
         transcriptionCoroutine = StartCoroutine(PlayTranscription());
-        audioFinishCoroutine = StartCoroutine(OnAudioFinished(audioSource.clip.length + 2.0f));
+        audioFinishCoroutine = StartCoroutine(OnAudioFinished(audioSource.clip.length + 1f));
     }
 
     IEnumerator PlayTranscription()

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -14,13 +13,6 @@ public class ARKitWorldMapManager : MonoBehaviour
     enum RotationState { None, CW, CCW }
     enum ScalingState { None, Up, Down }
 
-    // Because you can't have dictionaries in the inspector?
-    enum ModelType { Plaque, Statue }
-    [SerializeField] GameObject plaquePrefab;
-    [SerializeField] GameObject statuePrefab;
-    Dictionary<ModelType, GameObject> modelTypeToModelInstance = new Dictionary<ModelType, GameObject>();
-    GameObject ModelInstance { get { return modelTypeToModelInstance[modelType]; } }
-
     [SerializeField] Text modelTypeText;
     [SerializeField] GameObject referenceImage;
     [SerializeField] Toggle testModeToggle;
@@ -28,6 +20,14 @@ public class ARKitWorldMapManager : MonoBehaviour
     [SerializeField] float rotationSpeed;
     [SerializeField] float scalingSpeed;
     [SerializeField] LayerMask collisionLayer; // ARKitPlane layer
+
+    [Header("AR Scene to Instantiate")]
+    [SerializeField] GameObject scenePrefab;
+    GameObject sceneInstance;
+    int activeChildIndex;
+    GameObject ActiveChild { get { return sceneInstance.transform.GetChild(activeChildIndex).gameObject; } }
+    RotationState rotationState = RotationState.None;
+    ScalingState scalingState = ScalingState.None;
 
     [Header("GameObjects to hide for screenshot")]
     [SerializeField] PointCloudParticleExample PointCloudGenerator;
@@ -45,9 +45,6 @@ public class ARKitWorldMapManager : MonoBehaviour
         //ARHitTestResultType.ARHitTestResultTypeFeaturePoint
     };
 #endif
-    RotationState rotationState = RotationState.None;
-    ScalingState scalingState = ScalingState.None;
-    ModelType modelType = ModelType.Plaque;
 
     string WorldMapSavedAssetPrefixes
     {
@@ -55,7 +52,7 @@ public class ARKitWorldMapManager : MonoBehaviour
         {
             return string.Format("{0}{1}_",
                                  IsTestMode ? "TEST_" : "",
-                                 modelType.ToString());
+                                 scenePrefab.name);
         }
     }
 
@@ -86,10 +83,37 @@ public class ARKitWorldMapManager : MonoBehaviour
         get { return WorldMapSavedAssetPrefixes + "ReferenceImage.png"; }
     }
 
-    string PlayerPrefAnchorIdKey { get { return WorldMapSavedAssetPrefixes + "AnchorId"; } }
-    string PlayerPrefScaleXKey { get { return WorldMapSavedAssetPrefixes + "ScaleX"; } }
-    string PlayerPrefScaleYKey { get { return WorldMapSavedAssetPrefixes + "ScaleY"; } }
-    string PlayerPrefScaleZKey { get { return WorldMapSavedAssetPrefixes + "ScaleZ"; } }
+    Transform GetChildForAnchorId(string anchorId)
+    {
+        foreach (Transform child in sceneInstance.transform)
+        {
+            if (anchorId == PlayerPrefs.GetString(GetPlayerPrefAnchorIdKey(child.gameObject)))
+            {
+                return child;
+            }
+        }
+        return null;
+    }
+
+    string GetPlayerPrefAnchorIdKey(GameObject g)
+    {
+        return string.Format("{0}{1}_AnchorId", WorldMapSavedAssetPrefixes, g.name);
+    }
+
+    string GetPlayerPrefScaleXKey(string anchorId)
+    {
+        return string.Format("{0}{1}_ScaleX", WorldMapSavedAssetPrefixes, anchorId);
+    }
+
+    string GetPlayerPrefScaleYKey(string anchorId)
+    {
+        return string.Format("{0}{1}_ScaleY", WorldMapSavedAssetPrefixes, anchorId);
+    }
+
+    string GetPlayerPrefScaleZKey(string anchorId)
+    {
+        return string.Format("{0}{1}_ScaleZ", WorldMapSavedAssetPrefixes, anchorId);
+    }
 
     public void StartCWRotation()
     {
@@ -121,20 +145,18 @@ public class ARKitWorldMapManager : MonoBehaviour
         scalingState = ScalingState.None;
     }
 
-    public void ChangeModelType()
+    public void CycleActiveChild()
     {
-        ResetARSession();
-        modelType++;
-        if ((int)modelType == Enum.GetNames(typeof(ModelType)).Length)
+        if (++activeChildIndex >= sceneInstance.transform.childCount)
         {
-            modelType = 0;
+            activeChildIndex = 0;
         }
-        modelTypeText.text = modelType.ToString();
+        modelTypeText.text = ActiveChild.name;
     }
 
     public void ResetARSession()
     {
-        ModelInstance.SetActive(false);
+        SetChildrenActive(false);
         referenceImage.SetActive(false);
         Session.RunWithConfigAndOptions(ARKitCameraManager.Instance.sessionConfiguration, UnityARSessionRunOption.ARSessionRunOptionRemoveExistingAnchors | UnityARSessionRunOption.ARSessionRunOptionResetTracking);
     }
@@ -149,7 +171,7 @@ public class ARKitWorldMapManager : MonoBehaviour
 
     IEnumerator SaveWorldMapCoroutine()
     {
-        SaveModel();
+        SaveScene();
 
         // Wait one frame for model to save.
         yield return null;
@@ -172,7 +194,7 @@ public class ARKitWorldMapManager : MonoBehaviour
             // Temporarily hide elements just for screenshot
             PointCloudGenerator.ToggleParticles(false);
             ScreenUI.SetActive(false);
-            ModelInstance.SetActive(false);
+            SetChildrenActive(false);
 
             ScreenCapture.CaptureScreenshot(ReferenceImageSaveName);
             StartCoroutine(BecauseIOSScreenshotBehaviorIsUndefined());
@@ -193,7 +215,7 @@ public class ARKitWorldMapManager : MonoBehaviour
         yield return null;
 
         ScreenUI.SetActive(true);
-        ModelInstance.SetActive(true);
+        SetChildrenActive(true);
         PointCloudGenerator.ToggleParticles(true);
     }
 
@@ -222,132 +244,17 @@ public class ARKitWorldMapManager : MonoBehaviour
 #endif
     }
 
-    void UnityARSessionNativeInterface_ARUserAnchorAddedEvent(ARUserAnchor anchorData)
-    {
-        ModelInstance.transform.position = UnityARMatrixOps.GetPosition(anchorData.transform);
-        ModelInstance.transform.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
-        Debug.LogFormat("Added anchor: {0} | {1}", anchorData.identifier, ModelInstance.transform.position.ToString("F2"));
-
-        if (PlayerPrefs.HasKey(PlayerPrefScaleXKey) && PlayerPrefs.HasKey(PlayerPrefScaleYKey) && PlayerPrefs.HasKey(PlayerPrefScaleZKey))
-        {
-            ModelInstance.transform.localScale = new Vector3(PlayerPrefs.GetFloat(PlayerPrefScaleXKey), PlayerPrefs.GetFloat(PlayerPrefScaleYKey), PlayerPrefs.GetFloat(PlayerPrefScaleZKey));
-        }
-
-        ModelInstance.SetActive(true);
-    }
-
-    void UnityARSessionNativeInterface_ARUserAnchorUpdatedEvent(ARUserAnchor anchorData)
-    {
-        ModelInstance.transform.position = UnityARMatrixOps.GetPosition(anchorData.transform);
-        ModelInstance.transform.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
-
-        Debug.LogFormat("Updated anchor: {0} | {1}", anchorData.identifier, ModelInstance.transform.position.ToString("F2"));
-    }
-
-    void UnityARSessionNativeInterface_ARUserAnchorRemovedEvent(ARUserAnchor anchorData)
-    {
-        ModelInstance.SetActive(false);
-
-        Debug.LogFormat("Removed anchor: {0} | {1}", anchorData.identifier, ModelInstance.transform.position.ToString("F2"));
-    }
-
-    void SaveModel()
-    {
-        PlayerPrefs.SetFloat(PlayerPrefScaleXKey, ModelInstance.transform.localScale.x);
-        PlayerPrefs.SetFloat(PlayerPrefScaleYKey, ModelInstance.transform.localScale.y);
-        PlayerPrefs.SetFloat(PlayerPrefScaleZKey, ModelInstance.transform.localScale.z);
-
-        if (PlayerPrefs.HasKey(PlayerPrefAnchorIdKey))
-        {
-            Session.RemoveUserAnchor(PlayerPrefs.GetString(PlayerPrefAnchorIdKey));
-            PlayerPrefs.DeleteKey(PlayerPrefAnchorIdKey);
-        }
-        PlayerPrefs.SetString(PlayerPrefAnchorIdKey, Session.AddUserAnchorFromGameObject(ModelInstance).identifierStr);
-    }
-
-    void RotateModel(bool clockwise)
-    {
-        ModelInstance.transform.Rotate((clockwise ? 1 : -1) * rotationSpeed * Vector3.up * Time.deltaTime);
-    }
-
-    void ScaleModel(bool scaleUp)
-    {
-        Vector3 newScale = ModelInstance.transform.localScale + ((scaleUp ? 1 : -1) * scalingSpeed * Vector3.one * Time.deltaTime);
-        if (newScale.x < 0 || newScale.y < 0 || newScale.z < 0)
-        {
-            return;
-        }
-        ModelInstance.transform.localScale = newScale;
-    }
-
-    bool IsPointerOverUIObject()
-    {
-        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
-        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
-        return results.Count > 0;
-    }
-
-    bool HitTestWithResultType(ARPoint point, ARHitTestResultType resultTypes)
-    {
-        List<ARHitTestResult> hitResults = Session.HitTest(point, resultTypes);
-        if (hitResults.Count > 0)
-        {
-            foreach (var hitResult in hitResults)
-            {
-                ModelInstance.transform.position = UnityARMatrixOps.GetPosition(hitResult.worldTransform);
-                ModelInstance.SetActive(true);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    void HandleHitTest()
-    {
-#if !UNITY_EDITOR
-        if (Input.touchCount > 0 && !IsPointerOverUIObject())
-        {
-            var touch = Input.GetTouch(0);
-            if (touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Moved)
-            {
-                var screenPosition = Camera.main.ScreenToViewportPoint(touch.position);
-                ARPoint point = new ARPoint
-                {
-                    x = screenPosition.x,
-                    y = screenPosition.y
-                };
-
-                foreach (ARHitTestResultType resultType in hitTestResultPriorityOrder)
-                {
-                    if (HitTestWithResultType(point, resultType))
-                    {
-                        break;
-                    }
-                }
-            }
-        }
-#endif
-    }
-
-    void PopulateModelDictionary()
-    {
-        modelTypeToModelInstance[ModelType.Plaque] = Instantiate(plaquePrefab);
-        modelTypeToModelInstance[ModelType.Plaque].SetActive(false);
-        modelTypeToModelInstance[ModelType.Statue] = Instantiate(statuePrefab);
-        modelTypeToModelInstance[ModelType.Statue].SetActive(false);
-    }
-
     void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
         }
+
         Application.SetStackTraceLogType(LogType.Log, StackTraceLogType.None);
-        PopulateModelDictionary();
-        modelTypeText.text = modelType.ToString();
+        sceneInstance = Instantiate(scenePrefab);
+        modelTypeText.text = ActiveChild.name;
+        SetChildrenActive(false);
         referenceImage.SetActive(false);
     }
 
@@ -394,8 +301,131 @@ public class ARKitWorldMapManager : MonoBehaviour
         {
             Instance = null;
         }
+
         UnityARSessionNativeInterface.ARUserAnchorAddedEvent -= UnityARSessionNativeInterface_ARUserAnchorAddedEvent;
         UnityARSessionNativeInterface.ARUserAnchorUpdatedEvent -= UnityARSessionNativeInterface_ARUserAnchorUpdatedEvent;
         UnityARSessionNativeInterface.ARUserAnchorRemovedEvent -= UnityARSessionNativeInterface_ARUserAnchorRemovedEvent;
+    }
+
+    void UnityARSessionNativeInterface_ARUserAnchorAddedEvent(ARUserAnchor anchorData)
+    {
+        Transform child = GetChildForAnchorId(anchorData.identifier);
+
+        child.position = UnityARMatrixOps.GetPosition(anchorData.transform);
+        child.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
+        child.localScale = new Vector3(PlayerPrefs.GetFloat(GetPlayerPrefScaleXKey(anchorData.identifier)), PlayerPrefs.GetFloat(GetPlayerPrefScaleYKey(anchorData.identifier)), PlayerPrefs.GetFloat(GetPlayerPrefScaleZKey(anchorData.identifier)));
+        child.gameObject.SetActive(true);
+
+        Debug.LogFormat("Added anchor: {0} | {1}", anchorData.identifier, child.position.ToString("F2"));
+    }
+
+    void UnityARSessionNativeInterface_ARUserAnchorUpdatedEvent(ARUserAnchor anchorData)
+    {
+        Transform child = GetChildForAnchorId(anchorData.identifier);
+
+        child.position = UnityARMatrixOps.GetPosition(anchorData.transform);
+        child.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
+
+        Debug.LogFormat("Updated anchor: {0} | {1}", anchorData.identifier, child.position.ToString("F2"));
+    }
+
+    void UnityARSessionNativeInterface_ARUserAnchorRemovedEvent(ARUserAnchor anchorData)
+    {
+        Transform child = GetChildForAnchorId(anchorData.identifier);
+
+        child.gameObject.SetActive(false);
+
+        Debug.LogFormat("Removed anchor: {0} | {1}", anchorData.identifier, child.position.ToString("F2"));
+    }
+
+    void SaveScene()
+    {
+        foreach (Transform child in sceneInstance.transform)
+        {
+            if (PlayerPrefs.HasKey(GetPlayerPrefAnchorIdKey(child.gameObject)))
+            {
+                Session.RemoveUserAnchor(PlayerPrefs.GetString(GetPlayerPrefAnchorIdKey(child.gameObject)));
+            }
+
+            string anchorId = Session.AddUserAnchorFromGameObject(child.gameObject).identifierStr;
+            PlayerPrefs.SetString(GetPlayerPrefAnchorIdKey(child.gameObject), anchorId);
+            PlayerPrefs.SetFloat(GetPlayerPrefScaleXKey(anchorId), child.localScale.x);
+            PlayerPrefs.SetFloat(GetPlayerPrefScaleYKey(anchorId), child.localScale.y);
+            PlayerPrefs.SetFloat(GetPlayerPrefScaleZKey(anchorId), child.localScale.z);
+        }
+    }
+
+    void RotateModel(bool clockwise)
+    {
+        ActiveChild.transform.Rotate((clockwise ? 1 : -1) * rotationSpeed * Vector3.up * Time.deltaTime);
+    }
+
+    void ScaleModel(bool scaleUp)
+    {
+        Vector3 newScale = ActiveChild.transform.localScale + ((scaleUp ? 1 : -1) * scalingSpeed * Vector3.one * Time.deltaTime);
+        if (newScale.x < 0 || newScale.y < 0 || newScale.z < 0)
+        {
+            return;
+        }
+        ActiveChild.transform.localScale = newScale;
+    }
+
+    void SetChildrenActive(bool active)
+    {
+        foreach (Transform child in sceneInstance.transform)
+        {
+            child.gameObject.SetActive(active);
+        }
+    }
+
+    bool IsPointerOverUIObject()
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        return results.Count > 0;
+    }
+
+    bool HitTestWithResultType(ARPoint point, ARHitTestResultType resultTypes)
+    {
+        List<ARHitTestResult> hitResults = Session.HitTest(point, resultTypes);
+        if (hitResults.Count > 0)
+        {
+            foreach (var hitResult in hitResults)
+            {
+                ActiveChild.transform.position = UnityARMatrixOps.GetPosition(hitResult.worldTransform);
+                ActiveChild.SetActive(true);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void HandleHitTest()
+    {
+#if !UNITY_EDITOR
+        if (Input.touchCount > 0 && !IsPointerOverUIObject())
+        {
+            var touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Moved)
+            {
+                var screenPosition = Camera.main.ScreenToViewportPoint(touch.position);
+                ARPoint point = new ARPoint
+                {
+                    x = screenPosition.x,
+                    y = screenPosition.y
+                };
+
+                foreach (ARHitTestResultType resultType in hitTestResultPriorityOrder)
+                {
+                    if (HitTestWithResultType(point, resultType))
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+#endif
     }
 }

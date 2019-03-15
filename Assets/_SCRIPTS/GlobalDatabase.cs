@@ -27,6 +27,15 @@ public class GlobalDatabase : MonoBehaviour
         return new Tuple<int, int>(completedCount, voices.Length);
     }
 
+    public void ClearVoicePlayerPrefs()
+    {
+        foreach (Voice v in voices)
+        {
+            PlayerPrefs.DeleteKey(v.GetPlayerPrefKey());
+        }
+        DatabaseUpdated.Invoke();
+    }
+
     void Awake()
     {
         if (Instance == null)

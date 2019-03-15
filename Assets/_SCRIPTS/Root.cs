@@ -33,7 +33,12 @@ public class Root : MonoBehaviour
         SceneManager.LoadScene("Sandbox", LoadSceneMode.Single);
     }
 
-    public void ClearPlayerPrefs()
+    public void ClearVoicePlayerPrefs()
+    {
+        GlobalDatabase.Instance.ClearVoicePlayerPrefs();
+    }
+
+    public void ClearAllPlayerPrefs()
     {
         PlayerPrefs.DeleteAll();
     }

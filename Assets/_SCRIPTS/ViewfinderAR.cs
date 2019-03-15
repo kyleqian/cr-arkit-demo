@@ -7,49 +7,47 @@ using UnityEngine.XR.iOS;
 public class ViewfinderAR : MonoBehaviour
 {
     [SerializeField] string worldMapFilename;
-    [SerializeField] string playerPrefScaleXKey;
-    [SerializeField] string playerPrefScaleYKey;
-    [SerializeField] string playerPrefScaleZKey;
-    [SerializeField] GameObject modelPrefab;
+    [SerializeField] string playerPrefKeyPrefix;
     [SerializeField] float modelFadeInDuration;
-    GameObject modelInstance;
+    [SerializeField] GameObject scenePrefab;
+    GameObject sceneInstance;
 
     string WorldMapPath
     {
         get { return Path.Combine(Application.persistentDataPath, worldMapFilename); }
     }
 
-    void FadeInModel()
+    void FadeInModel(Transform model)
     {
-        StartCoroutine(FadeInModelCoroutine());
+        StartCoroutine(FadeInModelCoroutine(model));
     }
 
-    IEnumerator FadeInModelCoroutine()
+    IEnumerator FadeInModelCoroutine(Transform model)
     {
         // Change rendering mode to "Fade" to fade properly
-        UpdateModelRenderingMode(BlendMode.Fade);
+        UpdateModelRenderingMode(model, BlendMode.Fade);
 
         // Start with model fully transparent
-        UpdateModelAlpha(0);
+        UpdateModelAlpha(model, 0);
 
         for (float alpha = 0.0f; alpha < 1.0; alpha += Time.deltaTime / modelFadeInDuration)
         {
-            UpdateModelAlpha(alpha);
+            UpdateModelAlpha(model, alpha);
             yield return null;
         }
 
         // Change rendering mode to "Opaque" to display without weird transparency issues
-        UpdateModelRenderingMode(BlendMode.Opaque);
+        UpdateModelRenderingMode(model, BlendMode.Opaque);
     }
 
-    void UpdateModelAlpha(float newAlpha)
+    void UpdateModelAlpha(Transform model, float newAlpha)
     {
-        UpdateAlphaRecursive(modelInstance.transform, newAlpha);
+        UpdateAlphaRecursive(model, newAlpha);
     }
 
     void UpdateAlphaRecursive(Transform target, float newAlpha)
     {
-        foreach (Transform child in target.transform)
+        foreach (Transform child in target)
         {
             UpdateAlphaRecursive(child, newAlpha);
         }
@@ -74,14 +72,14 @@ public class ViewfinderAR : MonoBehaviour
         }
     }
 
-    void UpdateModelRenderingMode(BlendMode blendMode)
+    void UpdateModelRenderingMode(Transform model, BlendMode blendMode)
     {
-        UpdateRenderingModeRecursive(modelInstance.transform, blendMode);
+        UpdateRenderingModeRecursive(model, blendMode);
     }
 
     void UpdateRenderingModeRecursive(Transform target, BlendMode blendMode)
     {
-        foreach (Transform child in target.transform)
+        foreach (Transform child in target)
         {
             UpdateRenderingModeRecursive(child, blendMode);
         }
@@ -99,33 +97,71 @@ public class ViewfinderAR : MonoBehaviour
         }
     }
 
+    // TODO: Remove these?
+    Transform GetChildForAnchorId(string anchorId)
+    {
+        foreach (Transform child in sceneInstance.transform)
+        {
+            if (anchorId == PlayerPrefs.GetString(GetPlayerPrefAnchorIdKey(child.gameObject)))
+            {
+                return child;
+            }
+        }
+        return null;
+    }
+
+    string GetPlayerPrefAnchorIdKey(GameObject g)
+    {
+        return string.Format("{0}_{1}_AnchorId", playerPrefKeyPrefix, g.name);
+    }
+
+    string GetPlayerPrefScaleXKey(string anchorId)
+    {
+        return string.Format("{0}_{1}_ScaleX", playerPrefKeyPrefix, anchorId);
+    }
+
+    string GetPlayerPrefScaleYKey(string anchorId)
+    {
+        return string.Format("{0}_{1}_ScaleY", playerPrefKeyPrefix, anchorId);
+    }
+
+    string GetPlayerPrefScaleZKey(string anchorId)
+    {
+        return string.Format("{0}_{1}_ScaleZ", playerPrefKeyPrefix, anchorId);
+    }
+
     void UnityARSessionNativeInterface_ARUserAnchorAddedEvent(ARUserAnchor anchorData)
     {
-        // Position model
-        modelInstance.transform.position = UnityARMatrixOps.GetPosition(anchorData.transform);
-        modelInstance.transform.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
-        modelInstance.transform.localScale = new Vector3(PlayerPrefs.GetFloat(playerPrefScaleXKey), PlayerPrefs.GetFloat(playerPrefScaleYKey), PlayerPrefs.GetFloat(playerPrefScaleZKey));
+        Transform child = GetChildForAnchorId(anchorData.identifier);
+
+        child.position = UnityARMatrixOps.GetPosition(anchorData.transform);
+        child.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
+        child.localScale = new Vector3(PlayerPrefs.GetFloat(GetPlayerPrefScaleXKey(anchorData.identifier)), PlayerPrefs.GetFloat(GetPlayerPrefScaleYKey(anchorData.identifier)), PlayerPrefs.GetFloat(GetPlayerPrefScaleZKey(anchorData.identifier)));
 
         // Fade in newly placed model
-        FadeInModel();
-        modelInstance.SetActive(true);
+        FadeInModel(child);
+        child.gameObject.SetActive(true);
 
-        Debug.LogFormat("Added anchor: {0} | {1}", anchorData.identifier, modelInstance.transform.position.ToString("F2"));
+        Debug.LogFormat("Added anchor: {0} | {1}", anchorData.identifier, child.position.ToString("F2"));
     }
 
     void UnityARSessionNativeInterface_ARUserAnchorUpdatedEvent(ARUserAnchor anchorData)
     {
-        modelInstance.transform.position = UnityARMatrixOps.GetPosition(anchorData.transform);
-        modelInstance.transform.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
+        Transform child = GetChildForAnchorId(anchorData.identifier);
 
-        Debug.LogFormat("Updated anchor: {0} | {1}", anchorData.identifier, modelInstance.transform.position.ToString("F2"));
+        child.position = UnityARMatrixOps.GetPosition(anchorData.transform);
+        child.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
+
+        Debug.LogFormat("Updated anchor: {0} | {1}", anchorData.identifier, child.position.ToString("F2"));
     }
 
     void UnityARSessionNativeInterface_ARUserAnchorRemovedEvent(ARUserAnchor anchorData)
     {
-        modelInstance.SetActive(false);
+        Transform child = GetChildForAnchorId(anchorData.identifier);
 
-        Debug.LogFormat("Removed anchor: {0} | {1}", anchorData.identifier, modelInstance.transform.position.ToString("F2"));
+        child.gameObject.SetActive(false);
+
+        Debug.LogFormat("Removed anchor: {0} | {1}", anchorData.identifier, child.position.ToString("F2"));
     }
 
     void LoadWorldMap()
@@ -145,10 +181,18 @@ public class ViewfinderAR : MonoBehaviour
         }
     }
 
+    void SetChildrenActive(bool active)
+    {
+        foreach (Transform child in sceneInstance.transform)
+        {
+            child.gameObject.SetActive(active);
+        }
+    }
+
     void Awake()
     {
-        modelInstance = Instantiate(modelPrefab);
-        modelInstance.SetActive(false);
+        sceneInstance = Instantiate(scenePrefab);
+        SetChildrenActive(false);
     }
 
     void Start()
