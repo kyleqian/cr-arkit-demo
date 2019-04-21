@@ -2338,7 +2338,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldMapFilename: ARScene_save.worldmap
-  playerPrefKeyPrefix: ARScene_
+  playerPrefKeyPrefix: ARScene
   modelFadeInDuration: 2
   scenePrefab: {fileID: 7854927286931720538, guid: 82cdddf93be314b6bafd570d93d3bec4,
     type: 3}
