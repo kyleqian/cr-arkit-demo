@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/_SCENES/Title.unity
     guid: 4292467a6a37b4c5b99f70c13fd7655a
   - enabled: 1
+    path: Assets/_SCENES/Intro.unity
+    guid: 9c61b944b957e45cb94263cd9da4242d
+  - enabled: 1
     path: Assets/_SCENES/Viewfinder.unity
     guid: d383581eafcce4f23a6a62f11b630e56
   - enabled: 1
