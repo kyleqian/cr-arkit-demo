@@ -4,14 +4,15 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 46bb88197068e4ce6bf0345205857b89, type: 3}
-  m_Name: Gabby
+  m_Name: SL19
   m_EditorClassIdentifier: 
-  signature: Stanford Senior ('19)
+  signature: Student Leader, '19
   recording: {fileID: 8300000, guid: f05058be2fb7e46c59edeae5febb368b, type: 3}
   timestamps:
   - 0

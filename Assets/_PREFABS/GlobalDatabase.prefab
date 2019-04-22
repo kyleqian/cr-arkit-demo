@@ -43,5 +43,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e37416a75f0e4a599bdce18757130ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DatabaseUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
   voices:
+  - {fileID: 11400000, guid: 4353399fb74ec474bb7634a2156845f8, type: 2}
+  - {fileID: 11400000, guid: 1b2e42a2fdcc94c8f8b5e49728b39b42, type: 2}
+  - {fileID: 11400000, guid: 60fde95d7ce1b4f64b73758552bf6858, type: 2}
+  - {fileID: 11400000, guid: a6d355bde352d48e8884776ed265663d, type: 2}
+  - {fileID: 11400000, guid: 0d11b57724357436b853934b73330af0, type: 2}
   - {fileID: 11400000, guid: 0a7a6ef8f462446cfba3aaeaeb243510, type: 2}

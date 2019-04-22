@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46bb88197068e4ce6bf0345205857b89, type: 3}
+  m_Name: AK
+  m_EditorClassIdentifier: 
+  signature: Alexis Kallen
+  recording: {fileID: 8300000, guid: 7cc682c7385e34d8c8266521287754f7, type: 3}
+  timestamps:
+  - 0
+  - 10
+  - 26
+  - 34
+  - 50
+  - 62
+  - 74
+  - 81
+  - 95
+  - 110
+  - 121
+  - 130
+  - 147
+  - 155
+  transcriptions:
+  - "I guess I view it much like a memorial. I think that people choose to go there
+    knowing what they\u2019re getting into."
+  - "I understand if someone is not aware that\u2019s there and stumbles upon it and
+    gets triggered \u2026 I just don\u2019t think that\u2019s going to happen enough
+    to make it worth not putting it there."
+  - "Like Budapest where you\u2019ll be walking along the river and there\u2019s all
+    these empty shoes as a Holocaust memorial."
+  - "And that\u2019s extremely triggering but you go there knowing what you\u2019re
+    getting into and because it\u2019s so emotional it\u2019s such a powerful way
+    to try to think about what happened there and the magnitude of that."
+  - "Because I think that even if you learn about something and do your best to try
+    to conceptualize it in your mind, until you\u2019re in the space and really trying
+    to understand it\u2026"
+  - "You still won\u2019t, for most people. But it at least offers some extra level
+    of compassion for what happened there."
+  - "While they built a memorial in that space they haven\u2019t made that space any
+    safer by adding that memorial."
+  - "Half of Lake Lag is still unlit, and I think that a lot of things still need
+    to change at Stanford before it\u2019s considered anywhere near a safe campus
+    for women."
+  - We can also celebrate those and feel good about the small wins, because there
+    are very few in this field, while also using those as motivation to continue the
+    fight.
+  - "I guess I would just want people to know that there\u2019s a lot of us who spent,
+    not just myself, but many people before me, too,"
+  - who spent all four years of their Stanford education fighting to make the campus
+    a better place for women and a safer place for women.
+  - And that if they ever feel alone in fighting for those issues or they ever feel
+    like the administration is against them or just that the general social construct
+    at Stanford is against them,
+  - that there have been so many wonderful women and allies that have fought for them
+    and are standing here supporting them.
+  - 

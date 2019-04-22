@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46bb88197068e4ce6bf0345205857b89, type: 3}
+  m_Name: JR
+  m_EditorClassIdentifier: 
+  signature: Jerry Resident
+  recording: {fileID: 8300000, guid: 39efac4432169446caf5394c2df881a5, type: 3}
+  timestamps:
+  - 0
+  - 6
+  - 19
+  - 21
+  - 27
+  - 38
+  - 44
+  - 53
+  - 57
+  - 65
+  - 70
+  - 81
+  transcriptions:
+  - The first time I saw the memorial site was when you visit for your draw, your
+    in-house draw.
+  - And so I was scoping out the house and I noticed this beautiful fountain and bench,
+    and I explicitly thought, this is an awesome, beautiful, little site that I would
+    love to sit at, because you can hear this little fountain, and I since would go
+    there with my girlfriend.
+  - "We\u2019d just sit there and listen to the fountain."
+  - Had no idea what it was for. Made no connection. Just thought it was a really
+    beautiful space.
+  - And then when I looked it up, I immediately recalled all of the controversy about
+    the plaque and the quotations, and obviously, the event.
+  - "But to be honest, had no idea that I\u2019d been living right next to where the
+    event occurred that whole time."
+  - "I would really appreciate there being some marker because I think\u2026 I didn\u2019t
+    appreciate being naive about it, and enjoying it without understanding what it\u2019s
+    there for."
+  - "I think there\u2019s value in understanding concretely where the event occurred."
+  - "You can live in a little bit more of a bubble pretending that it didn\u2019t
+    occur or that it\u2019s distant from your life."
+  - "But to understand that this occurred right where I\u2019m living is kind of impactful."
+  - "They really need to put the victim\u2019s interests first, and so I think it
+    should be a priority to have some sort of memorial instead of it being stuck in
+    some kind of limbo indefinitely."
+  - 

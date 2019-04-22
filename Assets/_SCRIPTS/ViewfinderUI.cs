@@ -46,16 +46,20 @@ public class ViewfinderUI : MonoBehaviour
             RaycastHit raycastHit;
             if (Physics.Raycast(raycast, out raycastHit))
             {
+                contentUI.HideSelf();
                 switch (raycastHit.collider.tag)
                 {
                     case "LetterCups":
-                        contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("Gabby"));
+                        contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("SL19"));
                         break;
                     case "LetterFlashlight":
+                        contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("AK"));
                         break;
                     case "LetterFlower":
+                        contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("MS"));
                         break;
                     case "LetterPlaque":
+                        contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("JT"));
                         break;
                 }
             }
