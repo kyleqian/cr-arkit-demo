@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46bb88197068e4ce6bf0345205857b89, type: 3}
   m_Name: MS
   m_EditorClassIdentifier: 
-  signature: Master's Student
+  signature: Master's Student, '19
   recording: {fileID: 8300000, guid: dbd3b4afe7eff42d7b1135262f5faae1, type: 3}
   timestamps:
   - 0

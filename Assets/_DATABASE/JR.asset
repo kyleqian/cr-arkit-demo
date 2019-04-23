@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46bb88197068e4ce6bf0345205857b89, type: 3}
   m_Name: JR
   m_EditorClassIdentifier: 
-  signature: Jerry Resident
+  signature: Jerry Resident, '19
   recording: {fileID: 8300000, guid: 39efac4432169446caf5394c2df881a5, type: 3}
   timestamps:
   - 0

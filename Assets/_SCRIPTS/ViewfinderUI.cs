@@ -50,7 +50,7 @@ public class ViewfinderUI : MonoBehaviour
                 switch (raycastHit.collider.tag)
                 {
                     case "LetterCups":
-                        contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("SL19"));
+                        contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("SL"));
                         break;
                     case "LetterFlashlight":
                         contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("AK"));

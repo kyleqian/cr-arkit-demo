@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46bb88197068e4ce6bf0345205857b89, type: 3}
   m_Name: JT
   m_EditorClassIdentifier: 
-  signature: Justice Trenton
+  signature: Justice Tention, ASSU Exec '18
   recording: {fileID: 8300000, guid: 8ebf90c32710a4d91ac26b43804790b7, type: 3}
   timestamps:
   - 0
