@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46bb88197068e4ce6bf0345205857b89, type: 3}
+  m_Name: WTSD
+  m_EditorClassIdentifier: 
+  signature: Writer for The Stanford Daily, '19
+  recording: {fileID: 8300000, guid: a1e38e5d69a154448849e2ea8ca6acfe, type: 3}
+  timestamps:
+  - 0
+  - 20
+  - 30
+  - 45
+  - 51
+  - 68
+  - 73
+  - 84
+  - 95
+  - 104
+  - 113
+  transcriptions:
+  - "I had just started writing for the student groups beat of The Daily and I saw,
+    they made some kind of sign or something and hung it in White Plaza (the organizers
+    of the protest), advertising, \u201Cspeak out!\u201D and I saw it, and was like,
+    we should be covering this. "
+  - "I mean I was surprised by how many people were present, I think, in a positive
+    way. Seeing that I could see it from my window\u2026 "
+  - 'I remember, I think before term started, I was in my room, and I heard male students
+    basically talking about their sexual exploits in the garden.  '
+  - 'And, I mean, the irony was pretty extreme.  '
+  - 'I think that what certain memorials do very well, and some do less well, is rather
+    than trying to represent a tragedy, they try to represent the unrepresentability
+    of it. '
+  - "Because I don\u2019t think you can represent pain like this.  "
+  - "And I think part of why I don\u2019t love the idea of the garden is just because
+    it does nothing to represent unrepresentability.  "
+  - 'You know, it does not resemble the place where Doe was assaulted any more, and
+    there is something violent about that act of erasure, I think.  '
+  - "You know, I don\u2019t think a memorial can just skip to the \u201Chappy ending.\u201D
+    Then what is it memorializing? "
+  - "I mean, I do think that Emily Doe\u2019s voice should be present there, and I
+    do hope that that is something that can be heard in 10 years, or 20 years, or
+    30 years.  "
+  - 

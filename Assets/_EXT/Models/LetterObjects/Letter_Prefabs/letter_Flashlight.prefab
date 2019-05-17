@@ -117,7 +117,7 @@ Transform:
   m_GameObject: {fileID: 2453036222067563500}
   m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 1.783, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_LocalScale: {x: 0.12, y: 0.12, z: 0.12}
   m_Children:
   - {fileID: 4705666742470939667}
   - {fileID: 8617174160430446373}
@@ -131,6 +131,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6357643870374208282}
     m_Modifications:
+    - target: {fileID: 4473968230786879363, guid: 57d0f9c16580e344a941634c2d6609be,
+        type: 3}
+      propertyPath: m_Name
+      value: Flashlight#3
+      objectReference: {fileID: 0}
     - target: {fileID: 4473968230786454435, guid: 57d0f9c16580e344a941634c2d6609be,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -200,11 +205,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 6.6239
-      objectReference: {fileID: 0}
-    - target: {fileID: 4473968230786879363, guid: 57d0f9c16580e344a941634c2d6609be,
-        type: 3}
-      propertyPath: m_Name
-      value: Flashlight#3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 57d0f9c16580e344a941634c2d6609be, type: 3}

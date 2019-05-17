@@ -43,8 +43,7 @@ public class ViewfinderUI : MonoBehaviour
         if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
             Ray raycast = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
-            RaycastHit raycastHit;
-            if (Physics.Raycast(raycast, out raycastHit))
+            if (Physics.Raycast(raycast, out RaycastHit raycastHit))
             {
                 contentUI.HideSelf();
                 switch (raycastHit.collider.tag)
@@ -62,6 +61,11 @@ public class ViewfinderUI : MonoBehaviour
                         contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("JT"));
                         break;
                 }
+            }
+            else
+            {
+                // Tapped outside letter, so exit.
+                contentUI.HideSelf();
             }
         }
     }
