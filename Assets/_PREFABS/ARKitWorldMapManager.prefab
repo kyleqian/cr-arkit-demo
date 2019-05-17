@@ -52,7 +52,7 @@ MonoBehaviour:
   collisionLayer:
     serializedVersion: 2
     m_Bits: 1024
-  scenePrefab: {fileID: 7854927286931720538, guid: 82cdddf93be314b6bafd570d93d3bec4,
+  scenePrefab: {fileID: 7854927286931720538, guid: 54b01d65646f4444da5c3f291a37f7a0,
     type: 3}
   PointCloudGenerator: {fileID: 0}
   ScreenUI: {fileID: 0}

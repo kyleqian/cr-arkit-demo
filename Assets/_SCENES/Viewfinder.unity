@@ -2337,10 +2337,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c85ffb1c95fc6422bae2abf645b7587d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldMapFilename: ARScene_save.worldmap
-  playerPrefKeyPrefix: ARScene
+  worldMapFilename: ARScene_Big_save.worldmap
+  playerPrefKeyPrefix: ARScene_Big
   modelFadeInDuration: 2
-  scenePrefab: {fileID: 7854927286931720538, guid: 82cdddf93be314b6bafd570d93d3bec4,
+  scenePrefab: {fileID: 7854927286931720538, guid: 54b01d65646f4444da5c3f291a37f7a0,
     type: 3}
 --- !u!114 &1198602767
 MonoBehaviour:
@@ -2357,6 +2357,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anchoringUI: {fileID: 581950267}
   contentUI: {fileID: 2145775664}
+  UILayerMask:
+    serializedVersion: 2
+    m_Bits: 32
 --- !u!1001 &1308365991
 PrefabInstance:
   m_ObjectHideFlags: 0

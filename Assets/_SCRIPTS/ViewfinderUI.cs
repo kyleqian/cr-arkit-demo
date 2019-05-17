@@ -6,6 +6,7 @@ public class ViewfinderUI : MonoBehaviour
 {
     [SerializeField] AnchoringUI anchoringUI;
     [SerializeField] ContentUI contentUI;
+    [SerializeField] LayerMask UILayerMask;
 
     public void HomeButton()
     {
@@ -45,26 +46,29 @@ public class ViewfinderUI : MonoBehaviour
             Ray raycast = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
             if (Physics.Raycast(raycast, out RaycastHit raycastHit))
             {
-                contentUI.HideSelf();
                 switch (raycastHit.collider.tag)
                 {
                     case "LetterCups":
+                        contentUI.HideSelf();
                         contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("SL"));
                         break;
                     case "LetterFlashlight":
+                        contentUI.HideSelf();
                         contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("AK"));
                         break;
                     case "LetterFlower":
+                        contentUI.HideSelf();
                         contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("MS"));
                         break;
                     case "LetterPlaque":
+                        contentUI.HideSelf();
                         contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("JT"));
                         break;
                 }
             }
-            else
+            else if (!Physics.Raycast(raycast, out RaycastHit _, UILayerMask))
             {
-                // Tapped outside letter, so exit.
+                // Tapped outside UI, so exit.
                 contentUI.HideSelf();
             }
         }
