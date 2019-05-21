@@ -8,6 +8,7 @@ TagManager:
   - LetterCups
   - LetterFlashlight
   - LetterFlower
+  - LetterPlaqueBig
   layers:
   - Default
   - TransparentFX
