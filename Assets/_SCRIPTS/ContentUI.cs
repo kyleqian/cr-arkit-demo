@@ -28,6 +28,7 @@ public class ContentUI : MonoBehaviour
             return;
         }
         currentlyActive = true;
+        StopAllCoroutines();
         activeVoice = voice;
         text.text = "";
         signature.text = "- " + activeVoice.signature;
@@ -51,8 +52,8 @@ public class ContentUI : MonoBehaviour
             return;
         }
         currentlyActive = false;
-        activeVoice = null;
         StopAllCoroutines();
+        activeVoice = null;
 
         // Stop audio playback
         audioSource.Stop();
