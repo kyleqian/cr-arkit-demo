@@ -19,9 +19,6 @@ public class ContentUI : MonoBehaviour
     bool currentlyActive;
     Voice activeVoice;
     AudioSource audioSource;
-    Coroutine audioFinishCoroutine;
-    Coroutine transcriptionCoroutine;
-    Coroutine easeCoroutine;
     Vector3 canvasTransformInitialPosition;
 
     public void ShowSelf(Voice voice)
@@ -44,11 +41,7 @@ public class ContentUI : MonoBehaviour
         StartCoroutine(PlayAudioAndTranscription());
 
         // Ease in
-        if (easeCoroutine != null)
-        {
-            StopCoroutine(easeCoroutine);
-        }
-        easeCoroutine = StartCoroutine(EaseCanvas(true, 1.5f));
+        StartCoroutine(EaseCanvas(true, 1.5f));
     }
 
     public void HideSelf()
@@ -59,27 +52,16 @@ public class ContentUI : MonoBehaviour
         }
         currentlyActive = false;
         activeVoice = null;
+        StopAllCoroutines();
 
-        // Stop all audio playback and related coroutines
+        // Stop audio playback
         audioSource.Stop();
-        if (audioFinishCoroutine != null)
-        {
-            StopCoroutine(audioFinishCoroutine);
-        }
-        if (transcriptionCoroutine != null)
-        {
-            StopCoroutine(transcriptionCoroutine);
-        }
 
         // Start above screen
         canvasTransform.position = canvasTransformInitialPosition;
 
         // Ease out
-        if (easeCoroutine != null)
-        {
-            StopCoroutine(easeCoroutine);
-        }
-        easeCoroutine = StartCoroutine(EaseCanvas(false, 1.5f));
+        StartCoroutine(EaseCanvas(false, 1.5f));
     }
 
     public void ToggleVolume()
@@ -157,16 +139,8 @@ public class ContentUI : MonoBehaviour
         yield return new WaitForSeconds(3);
 
         audioSource.Play();
-        if (transcriptionCoroutine != null)
-        {
-            StopCoroutine(transcriptionCoroutine);
-        }
-        if (audioFinishCoroutine != null)
-        {
-            StopCoroutine(audioFinishCoroutine);
-        }
-        transcriptionCoroutine = StartCoroutine(PlayTranscription());
-        audioFinishCoroutine = StartCoroutine(OnAudioFinished(audioSource.clip.length + 1f));
+        StartCoroutine(PlayTranscription());
+        StartCoroutine(OnAudioFinished(audioSource.clip.length + 1f));
     }
 
     IEnumerator PlayTranscription()
