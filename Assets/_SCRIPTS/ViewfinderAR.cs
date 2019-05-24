@@ -10,7 +10,12 @@ public class ViewfinderAR : MonoBehaviour
     [SerializeField] string playerPrefKeyPrefix;
     [SerializeField] float modelFadeInDuration;
     [SerializeField] GameObject scenePrefab;
+    [SerializeField] GameObject tapToPlaceParent;
     GameObject sceneInstance;
+
+    bool AnchoringFound = false;
+    float TimeElapsed = 0f;
+    float MaxTimeAnchorSearch = 10f;
 
     string WorldMapPath
     {
@@ -132,6 +137,8 @@ public class ViewfinderAR : MonoBehaviour
 
     void UnityARSessionNativeInterface_ARUserAnchorAddedEvent(ARUserAnchor anchorData)
     {
+        AnchoringFound = true;
+
         Transform child = GetChildForAnchorId(anchorData.identifier);
 
         child.position = UnityARMatrixOps.GetPosition(anchorData.transform);
@@ -189,6 +196,11 @@ public class ViewfinderAR : MonoBehaviour
         }
     }
 
+    void InitializeTapToPlace()
+    {
+        tapToPlaceParent.SetActive(true);
+    }
+
     void Awake()
     {
         sceneInstance = Instantiate(scenePrefab);
@@ -202,6 +214,21 @@ public class ViewfinderAR : MonoBehaviour
         UnityARSessionNativeInterface.ARUserAnchorRemovedEvent += UnityARSessionNativeInterface_ARUserAnchorRemovedEvent;
         UnityARSessionNativeInterface.ARSessionShouldAttemptRelocalization = true;
         LoadWorldMap();
+    }
+
+    void Update()
+    {
+        // wait for 10 sec; if no worldmap found; go into
+        if (TimeElapsed > MaxTimeAnchorSearch)
+        {
+            TimeElapsed = MaxTimeAnchorSearch;
+            // Start tap to place here
+            // InitializeTapToPlace(); // PUT BACK ONCE HAVE TIME
+        }
+        else if (TimeElapsed < MaxTimeAnchorSearch)
+        {
+            TimeElapsed += Time.deltaTime;
+        }
     }
 
     void OnDestroy()
