@@ -97,5 +97,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fced0dc5a88a54a65aa4adf5beee49db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ARScenePrefab: {fileID: 7854927286931720538, guid: 54b01d65646f4444da5c3f291a37f7a0,
+    type: 3}
   firebaseDownloadUrl: gs://dear-visitor.appspot.com/ARScene_Big_save.worldmap
-  worldMapFilename: ARScene_Big_save.worldmap

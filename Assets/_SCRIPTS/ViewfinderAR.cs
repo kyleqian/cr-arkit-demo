@@ -95,32 +95,12 @@ public class ViewfinderAR : MonoBehaviour
     {
         foreach (Transform child in sceneInstance.transform)
         {
-            if (anchorId == PlayerPrefs.GetString(GetPlayerPrefAnchorIdKey(child.gameObject)))
+            if (anchorId == PlayerPrefs.GetString(GlobalMapManager.Instance.GetPlayerPrefAnchorIdKey(child.gameObject)))
             {
                 return child;
             }
         }
         return null;
-    }
-
-    string GetPlayerPrefAnchorIdKey(GameObject g)
-    {
-        return string.Format("{0}_{1}_AnchorId", playerPrefKeyPrefix, g.name);
-    }
-
-    string GetPlayerPrefScaleXKey(string anchorId)
-    {
-        return string.Format("{0}_{1}_ScaleX", playerPrefKeyPrefix, anchorId);
-    }
-
-    string GetPlayerPrefScaleYKey(string anchorId)
-    {
-        return string.Format("{0}_{1}_ScaleY", playerPrefKeyPrefix, anchorId);
-    }
-
-    string GetPlayerPrefScaleZKey(string anchorId)
-    {
-        return string.Format("{0}_{1}_ScaleZ", playerPrefKeyPrefix, anchorId);
     }
 
     void UnityARSessionNativeInterface_ARUserAnchorAddedEvent(ARUserAnchor anchorData)
@@ -129,7 +109,7 @@ public class ViewfinderAR : MonoBehaviour
 
         child.position = UnityARMatrixOps.GetPosition(anchorData.transform);
         child.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
-        child.localScale = new Vector3(PlayerPrefs.GetFloat(GetPlayerPrefScaleXKey(anchorData.identifier)), PlayerPrefs.GetFloat(GetPlayerPrefScaleYKey(anchorData.identifier)), PlayerPrefs.GetFloat(GetPlayerPrefScaleZKey(anchorData.identifier)));
+        child.localScale = new Vector3(PlayerPrefs.GetFloat(GlobalMapManager.Instance.GetPlayerPrefScaleXKey(anchorData.identifier)), PlayerPrefs.GetFloat(GlobalMapManager.Instance.GetPlayerPrefScaleYKey(anchorData.identifier)), PlayerPrefs.GetFloat(GlobalMapManager.Instance.GetPlayerPrefScaleZKey(anchorData.identifier)));
 
         // Fade in newly placed model
         FadeInModel(child);

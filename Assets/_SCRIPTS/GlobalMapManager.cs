@@ -10,16 +10,56 @@ public class GlobalMapManager : MonoBehaviour
     public bool DownloadInProgress { get; private set; }
     public delegate void DownloadCallback();
 
-    [SerializeField] string firebaseDownloadUrl;
-    [SerializeField] string worldMapFilename;
+    [SerializeField] GameObject ARScenePrefab;
 
     FirebaseStorage storage;
     StorageReference reference;
-    string persistentDataPath; // Not sure why, but can't call Application.persistentDataPath in Tasks.
+    string persistentDataPath; // Not sure why, but can't call Application.persistentDataPath in callbacks.
 
     public string WorldMapPath
     {
-        get { return Path.Combine(persistentDataPath, worldMapFilename); }
+        get { return Path.Combine(persistentDataPath, WorldMapFilename); }
+    }
+
+    public string WorldMapFilename
+    {
+        get { return WorldMapAssetPrefix + ".worldmap"; }
+    }
+
+    public string WorldMapAssetPrefix
+    {
+        get
+        {
+            return string.Format("{0}{1}",
+                                 ARKitWorldMapManager.Instance != null &&
+                                 ARKitWorldMapManager.Instance.IsTestMode ? "TEST_" : "",
+                                 ARScenePrefab.name);
+        }
+    }
+
+    public string GetPlayerPrefAnchorIdKey(GameObject g)
+    {
+        return string.Format("{0}_{1}_AnchorId", WorldMapAssetPrefix, g.name);
+    }
+
+    public string GetPlayerPrefScaleXKey(string anchorId)
+    {
+        return string.Format("{0}_{1}_ScaleX", WorldMapAssetPrefix, anchorId);
+    }
+
+    public string GetPlayerPrefScaleYKey(string anchorId)
+    {
+        return string.Format("{0}_{1}_ScaleY", WorldMapAssetPrefix, anchorId);
+    }
+
+    public string GetPlayerPrefScaleZKey(string anchorId)
+    {
+        return string.Format("{0}_{1}_ScaleZ", WorldMapAssetPrefix, anchorId);
+    }
+
+    string FirebaseDownloadUrl
+    {
+        get { return string.Format("gs://dear-visitor.appspot.com/{0}", WorldMapFilename); }
     }
 
     string FirebaseWorldMapPath
@@ -101,7 +141,7 @@ public class GlobalMapManager : MonoBehaviour
         {
             DontDestroyOnLoad(this);
             storage = FirebaseStorage.DefaultInstance;
-            reference = storage.GetReferenceFromUrl(firebaseDownloadUrl);
+            reference = storage.GetReferenceFromUrl(FirebaseDownloadUrl);
             persistentDataPath = Application.persistentDataPath;
         }
     }
