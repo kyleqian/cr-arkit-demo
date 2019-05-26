@@ -1,0 +1,101 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1494610048619503437
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1494610048619503441}
+  - component: {fileID: 1494610048619503440}
+  - component: {fileID: 1494610048619503439}
+  - component: {fileID: 1494610048619503438}
+  - component: {fileID: 1494610049196742306}
+  m_Layer: 0
+  m_Name: GlobalScripts
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1494610048619503441
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1494610048619503437}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1494610048619503440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1494610048619503437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e37416a75f0e4a599bdce18757130ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DatabaseUpdated:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  voices:
+  - {fileID: 11400000, guid: 4353399fb74ec474bb7634a2156845f8, type: 2}
+  - {fileID: 11400000, guid: 1b2e42a2fdcc94c8f8b5e49728b39b42, type: 2}
+  - {fileID: 11400000, guid: 60fde95d7ce1b4f64b73758552bf6858, type: 2}
+  - {fileID: 11400000, guid: a6d355bde352d48e8884776ed265663d, type: 2}
+  - {fileID: 11400000, guid: 0d11b57724357436b853934b73330af0, type: 2}
+  - {fileID: 11400000, guid: 0a7a6ef8f462446cfba3aaeaeb243510, type: 2}
+  - {fileID: 11400000, guid: 5c7d5047b50424b26a2feb2b9958b651, type: 2}
+  - {fileID: 11400000, guid: 5217d5e30ef4a43ecb3307d475ec8c2d, type: 2}
+  - {fileID: 11400000, guid: 31e37619e2e5b4492a3637a7076236e6, type: 2}
+--- !u!114 &1494610048619503439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1494610048619503437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d7f145ebd96f4c77a844280136368d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1494610048619503438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1494610048619503437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f98ffc96146374d00873036b88ba6021, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1494610049196742306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1494610048619503437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fced0dc5a88a54a65aa4adf5beee49db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firebaseDownloadUrl: gs://dear-visitor.appspot.com/ARScene_Big_save.worldmap
+  worldMapFilename: ARScene_Big_save.worldmap

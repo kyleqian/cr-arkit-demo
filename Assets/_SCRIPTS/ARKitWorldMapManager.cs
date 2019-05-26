@@ -200,6 +200,8 @@ public class ARKitWorldMapManager : MonoBehaviour
             StartCoroutine(BecauseIOSScreenshotBehaviorIsUndefined());
 
             Debug.LogFormat("ARWorldMap saved to {0}", WorldMapSavePath);
+            
+            GlobalMapManager.Instance.UploadMap();
         }
 #endif
     }

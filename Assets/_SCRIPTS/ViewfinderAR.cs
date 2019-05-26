@@ -1,21 +1,14 @@
 ﻿using System.Collections;
-using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.XR.iOS;
 
 public class ViewfinderAR : MonoBehaviour
 {
-    [SerializeField] string worldMapFilename;
     [SerializeField] string playerPrefKeyPrefix;
     [SerializeField] float modelFadeInDuration;
     [SerializeField] GameObject scenePrefab;
     GameObject sceneInstance;
-
-    string WorldMapPath
-    {
-        get { return Path.Combine(Application.persistentDataPath, worldMapFilename); }
-    }
 
     void FadeInModel(Transform model)
     {
@@ -166,19 +159,22 @@ public class ViewfinderAR : MonoBehaviour
 
     void LoadWorldMap()
     {
-        Debug.LogFormat("Loading ARWorldMap {0}", WorldMapPath);
-        var worldMap = ARWorldMap.Load(WorldMapPath);
-        if (worldMap != null)
+        Debug.Log("Attempting to load ARWorldMap.");
+        GlobalMapManager.Instance.DownloadLatestMap(() =>
         {
-            Debug.LogFormat("Map loaded. Center: {0} Extent: {1}", worldMap.center, worldMap.extent);
+            var worldMap = ARWorldMap.Load(GlobalMapManager.Instance.WorldMapPath);
+            if (worldMap != null)
+            {
+                Debug.LogFormat("Map loaded. Center: {0} Extent: {1}", worldMap.center, worldMap.extent);
 
-            var config = ARKitManager.Instance.DefaultSessionConfiguration;
-            config.worldMap = worldMap;
-            UnityARSessionRunOption runOption = UnityARSessionRunOption.ARSessionRunOptionRemoveExistingAnchors | UnityARSessionRunOption.ARSessionRunOptionResetTracking;
+                var config = ARKitManager.Instance.DefaultSessionConfiguration;
+                config.worldMap = worldMap;
+                UnityARSessionRunOption runOption = UnityARSessionRunOption.ARSessionRunOptionRemoveExistingAnchors | UnityARSessionRunOption.ARSessionRunOptionResetTracking;
 
-            Debug.Log("Restarting session with worldMap");
-            ARKitManager.Instance.Session.RunWithConfigAndOptions(config, runOption);
-        }
+                Debug.Log("Restarting session with worldMap");
+                ARKitManager.Instance.Session.RunWithConfigAndOptions(config, runOption);
+            }
+        });
     }
 
     void SetChildrenActive(bool active)
