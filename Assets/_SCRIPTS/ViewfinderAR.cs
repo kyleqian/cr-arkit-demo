@@ -1,12 +1,10 @@
 ﻿using System.Collections;
-using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.XR.iOS;
 
 public class ViewfinderAR : MonoBehaviour
 {
-    [SerializeField] string worldMapFilename;
     [SerializeField] string playerPrefKeyPrefix;
     [SerializeField] float modelFadeInDuration;
     [SerializeField] GameObject scenePrefab;
@@ -16,11 +14,6 @@ public class ViewfinderAR : MonoBehaviour
     bool AnchoringFound = false;
     float TimeElapsed = 0f;
     float MaxTimeAnchorSearch = 10f;
-
-    string WorldMapPath
-    {
-        get { return Path.Combine(Application.persistentDataPath, worldMapFilename); }
-    }
 
     void FadeInModel(Transform model)
     {
@@ -107,32 +100,12 @@ public class ViewfinderAR : MonoBehaviour
     {
         foreach (Transform child in sceneInstance.transform)
         {
-            if (anchorId == PlayerPrefs.GetString(GetPlayerPrefAnchorIdKey(child.gameObject)))
+            if (anchorId == PlayerPrefs.GetString(GlobalMapManager.Instance.GetPlayerPrefAnchorIdKey(child.gameObject)))
             {
                 return child;
             }
         }
         return null;
-    }
-
-    string GetPlayerPrefAnchorIdKey(GameObject g)
-    {
-        return string.Format("{0}_{1}_AnchorId", playerPrefKeyPrefix, g.name);
-    }
-
-    string GetPlayerPrefScaleXKey(string anchorId)
-    {
-        return string.Format("{0}_{1}_ScaleX", playerPrefKeyPrefix, anchorId);
-    }
-
-    string GetPlayerPrefScaleYKey(string anchorId)
-    {
-        return string.Format("{0}_{1}_ScaleY", playerPrefKeyPrefix, anchorId);
-    }
-
-    string GetPlayerPrefScaleZKey(string anchorId)
-    {
-        return string.Format("{0}_{1}_ScaleZ", playerPrefKeyPrefix, anchorId);
     }
 
     void UnityARSessionNativeInterface_ARUserAnchorAddedEvent(ARUserAnchor anchorData)
@@ -143,7 +116,7 @@ public class ViewfinderAR : MonoBehaviour
 
         child.position = UnityARMatrixOps.GetPosition(anchorData.transform);
         child.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
-        child.localScale = new Vector3(PlayerPrefs.GetFloat(GetPlayerPrefScaleXKey(anchorData.identifier)), PlayerPrefs.GetFloat(GetPlayerPrefScaleYKey(anchorData.identifier)), PlayerPrefs.GetFloat(GetPlayerPrefScaleZKey(anchorData.identifier)));
+        child.localScale = new Vector3(PlayerPrefs.GetFloat(GlobalMapManager.Instance.GetPlayerPrefScaleXKey(anchorData.identifier)), PlayerPrefs.GetFloat(GlobalMapManager.Instance.GetPlayerPrefScaleYKey(anchorData.identifier)), PlayerPrefs.GetFloat(GlobalMapManager.Instance.GetPlayerPrefScaleZKey(anchorData.identifier)));
 
         // Fade in newly placed model
         FadeInModel(child);
@@ -173,19 +146,22 @@ public class ViewfinderAR : MonoBehaviour
 
     void LoadWorldMap()
     {
-        Debug.LogFormat("Loading ARWorldMap {0}", WorldMapPath);
-        var worldMap = ARWorldMap.Load(WorldMapPath);
-        if (worldMap != null)
+        Debug.Log("Attempting to load ARWorldMap.");
+        GlobalMapManager.Instance.DownloadLatestMap(() =>
         {
-            Debug.LogFormat("Map loaded. Center: {0} Extent: {1}", worldMap.center, worldMap.extent);
+            var worldMap = ARWorldMap.Load(GlobalMapManager.Instance.WorldMapPath);
+            if (worldMap != null)
+            {
+                Debug.LogFormat("Map loaded. Center: {0} Extent: {1}", worldMap.center, worldMap.extent);
 
-            var config = ARKitManager.Instance.DefaultSessionConfiguration;
-            config.worldMap = worldMap;
-            UnityARSessionRunOption runOption = UnityARSessionRunOption.ARSessionRunOptionRemoveExistingAnchors | UnityARSessionRunOption.ARSessionRunOptionResetTracking;
+                var config = ARKitManager.Instance.DefaultSessionConfiguration;
+                config.worldMap = worldMap;
+                UnityARSessionRunOption runOption = UnityARSessionRunOption.ARSessionRunOptionRemoveExistingAnchors | UnityARSessionRunOption.ARSessionRunOptionResetTracking;
 
-            Debug.Log("Restarting session with worldMap");
-            ARKitManager.Instance.Session.RunWithConfigAndOptions(config, runOption);
-        }
+                Debug.Log("Restarting session with worldMap");
+                ARKitManager.Instance.Session.RunWithConfigAndOptions(config, runOption);
+            }
+        });
     }
 
     void SetChildrenActive(bool active)

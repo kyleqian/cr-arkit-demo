@@ -46,24 +46,9 @@ public class ARKitWorldMapManager : MonoBehaviour
     };
 #endif
 
-    string WorldMapSavedAssetPrefixes
-    {
-        get
-        {
-            return string.Format("{0}{1}_",
-                                 IsTestMode ? "TEST_" : "",
-                                 scenePrefab.name);
-        }
-    }
-
     UnityARSessionNativeInterface Session
     {
         get { return UnityARSessionNativeInterface.GetARSessionNativeInterface(); }
-    }
-
-    string WorldMapSavePath
-    {
-        get { return Path.Combine(Application.persistentDataPath, WorldMapSavedAssetPrefixes + "save.worldmap"); }
     }
 
     string ReferenceImageSavePath
@@ -80,39 +65,19 @@ public class ARKitWorldMapManager : MonoBehaviour
 
     string ReferenceImageSaveName
     {
-        get { return WorldMapSavedAssetPrefixes + "ReferenceImage.png"; }
+        get { return GlobalMapManager.Instance.WorldMapAssetPrefix + "ReferenceImage.png"; }
     }
 
     Transform GetChildForAnchorId(string anchorId)
     {
         foreach (Transform child in sceneInstance.transform)
         {
-            if (anchorId == PlayerPrefs.GetString(GetPlayerPrefAnchorIdKey(child.gameObject)))
+            if (anchorId == PlayerPrefs.GetString(GlobalMapManager.Instance.GetPlayerPrefAnchorIdKey(child.gameObject)))
             {
                 return child;
             }
         }
         return null;
-    }
-
-    string GetPlayerPrefAnchorIdKey(GameObject g)
-    {
-        return string.Format("{0}{1}_AnchorId", WorldMapSavedAssetPrefixes, g.name);
-    }
-
-    string GetPlayerPrefScaleXKey(string anchorId)
-    {
-        return string.Format("{0}{1}_ScaleX", WorldMapSavedAssetPrefixes, anchorId);
-    }
-
-    string GetPlayerPrefScaleYKey(string anchorId)
-    {
-        return string.Format("{0}{1}_ScaleY", WorldMapSavedAssetPrefixes, anchorId);
-    }
-
-    string GetPlayerPrefScaleZKey(string anchorId)
-    {
-        return string.Format("{0}{1}_ScaleZ", WorldMapSavedAssetPrefixes, anchorId);
     }
 
     public void StartCWRotation()
@@ -200,6 +165,8 @@ public class ARKitWorldMapManager : MonoBehaviour
             StartCoroutine(BecauseIOSScreenshotBehaviorIsUndefined());
 
             Debug.LogFormat("ARWorldMap saved to {0}", WorldMapSavePath);
+            
+            GlobalMapManager.Instance.UploadMap();
         }
 #endif
     }
@@ -313,7 +280,7 @@ public class ARKitWorldMapManager : MonoBehaviour
 
         child.position = UnityARMatrixOps.GetPosition(anchorData.transform);
         child.rotation = UnityARMatrixOps.GetRotation(anchorData.transform);
-        child.localScale = new Vector3(PlayerPrefs.GetFloat(GetPlayerPrefScaleXKey(anchorData.identifier)), PlayerPrefs.GetFloat(GetPlayerPrefScaleYKey(anchorData.identifier)), PlayerPrefs.GetFloat(GetPlayerPrefScaleZKey(anchorData.identifier)));
+        child.localScale = new Vector3(PlayerPrefs.GetFloat(GlobalMapManager.Instance.GetPlayerPrefScaleXKey(anchorData.identifier)), PlayerPrefs.GetFloat(GlobalMapManager.Instance.GetPlayerPrefScaleYKey(anchorData.identifier)), PlayerPrefs.GetFloat(GlobalMapManager.Instance.GetPlayerPrefScaleZKey(anchorData.identifier)));
         child.gameObject.SetActive(true);
 
         Debug.LogFormat("Added anchor: {0} | {1}", anchorData.identifier, child.position.ToString("F2"));
@@ -342,16 +309,19 @@ public class ARKitWorldMapManager : MonoBehaviour
     {
         foreach (Transform child in sceneInstance.transform)
         {
-            if (PlayerPrefs.HasKey(GetPlayerPrefAnchorIdKey(child.gameObject)))
+            if (PlayerPrefs.HasKey(GlobalMapManager.Instance.GetPlayerPrefAnchorIdKey(child.gameObject)))
             {
-                Session.RemoveUserAnchor(PlayerPrefs.GetString(GetPlayerPrefAnchorIdKey(child.gameObject)));
+                Session.RemoveUserAnchor(PlayerPrefs.GetString(GlobalMapManager.Instance.GetPlayerPrefAnchorIdKey(child.gameObject)));
             }
 
-            string anchorId = Session.AddUserAnchorFromGameObject(child.gameObject).identifierStr;
-            PlayerPrefs.SetString(GetPlayerPrefAnchorIdKey(child.gameObject), anchorId);
-            PlayerPrefs.SetFloat(GetPlayerPrefScaleXKey(anchorId), child.localScale.x);
-            PlayerPrefs.SetFloat(GetPlayerPrefScaleYKey(anchorId), child.localScale.y);
-            PlayerPrefs.SetFloat(GetPlayerPrefScaleZKey(anchorId), child.localScale.z);
+            if (child.gameObject.activeSelf)
+            {
+                string anchorId = Session.AddUserAnchorFromGameObject(child.gameObject).identifierStr;
+                PlayerPrefs.SetString(GlobalMapManager.Instance.GetPlayerPrefAnchorIdKey(child.gameObject), anchorId);
+                PlayerPrefs.SetFloat(GlobalMapManager.Instance.GetPlayerPrefScaleXKey(anchorId), child.localScale.x);
+                PlayerPrefs.SetFloat(GlobalMapManager.Instance.GetPlayerPrefScaleYKey(anchorId), child.localScale.y);
+                PlayerPrefs.SetFloat(GlobalMapManager.Instance.GetPlayerPrefScaleZKey(anchorId), child.localScale.z);
+            }
         }
     }
 

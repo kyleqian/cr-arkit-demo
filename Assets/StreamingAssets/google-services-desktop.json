@@ -1,0 +1,37 @@
+{
+  "client": [
+    {
+      "services": {
+        "appinvite_service": {
+          "status": 1
+        }, 
+        "analytics_service": {
+          "status": 0
+        }
+      }, 
+      "oauth_client": [
+        {
+          "client_id": "544232915256-mdhnva2i1gvuq1ugkv01220crebvkqb7.apps.googleusercontent.com"
+        }
+      ], 
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQZsMYvgQ1trDnRsuafzZvFZTv1hHEXkY"
+        }
+      ], 
+      "client_info": {
+        "mobilesdk_app_id": "1:544232915256:ios:226c3adcafd75fa1", 
+        "android_client_info": {
+          "package_name": "com.magic.dearvisitor"
+        }
+      }
+    }
+  ], 
+  "configuration_version": "1", 
+  "project_info": {
+    "storage_bucket": "dear-visitor.appspot.com", 
+    "project_id": "dear-visitor", 
+    "firebase_url": "https://dear-visitor.firebaseio.com", 
+    "project_number": "544232915256"
+  }
+}
