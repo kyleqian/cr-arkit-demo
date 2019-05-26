@@ -198,6 +198,7 @@ public class ViewfinderAR : MonoBehaviour
 
     void InitializeTapToPlace()
     {
+        FindObjectOfType<AnchoringUI>().FadeOut();
         tapToPlaceParent.SetActive(true);
     }
 
@@ -223,7 +224,7 @@ public class ViewfinderAR : MonoBehaviour
         {
             TimeElapsed = MaxTimeAnchorSearch;
             // Start tap to place here
-            // InitializeTapToPlace(); // PUT BACK ONCE HAVE TIME
+            InitializeTapToPlace(); // PUT BACK ONCE HAVE TIME
         }
         else if (TimeElapsed < MaxTimeAnchorSearch)
         {
