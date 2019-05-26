@@ -15,7 +15,7 @@ public class TransparencyPingPong : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float alpha = Mathf.PingPong(Time.time / 5f, 0.5f) + 0.2f;
+        float alpha = Mathf.PingPong(Time.time / 5f, 0.4f) + 0.2f;
         image.color = new Color(image.color.r, image.color.g, image.color.b, alpha);
     }
 }
