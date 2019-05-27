@@ -61,6 +61,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5c7d5047b50424b26a2feb2b9958b651, type: 2}
   - {fileID: 11400000, guid: 5217d5e30ef4a43ecb3307d475ec8c2d, type: 2}
   - {fileID: 11400000, guid: 31e37619e2e5b4492a3637a7076236e6, type: 2}
+  - {fileID: 11400000, guid: 040cf8c37afc14b40a2de2320bf793ce, type: 2}
+  - {fileID: 11400000, guid: b97305e1c56ee4614b0ce83c43d57411, type: 2}
 --- !u!114 &1494610048619503439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,4 +101,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ARScenePrefab: {fileID: 7854927286931720538, guid: 54b01d65646f4444da5c3f291a37f7a0,
     type: 3}
-  firebaseDownloadUrl: gs://dear-visitor.appspot.com/ARScene_Big_save.worldmap

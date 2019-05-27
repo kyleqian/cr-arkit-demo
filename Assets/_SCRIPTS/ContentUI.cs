@@ -107,8 +107,8 @@ public class ContentUI : MonoBehaviour
         }
 
         float startingY = canvasTransform.position.y;
-        // TODO: Fix the magic -150f for iPad.
-        float targetY = easeIn ? canvasTransformInitialPosition.y : canvasTransformInitialPosition.y - canvasTransform.rect.height - 150f;
+        // TODO: Fix the magic -300f for iPad.
+        float targetY = easeIn ? canvasTransformInitialPosition.y : canvasTransformInitialPosition.y - canvasTransform.rect.height - 300f;
         for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / duration)
         {
             Vector3 newPosition = canvasTransform.position;
