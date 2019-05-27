@@ -138,7 +138,7 @@ public class ContentUI : MonoBehaviour
     {
         audioSource.clip = activeVoice.recording;
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
 
         audioSource.Play();
         StartCoroutine(PlayTranscription());
