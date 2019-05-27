@@ -152,7 +152,7 @@ public class ContentUI : MonoBehaviour
             {
                 yield return new WaitForSeconds(activeVoice.timestamps[i] - activeVoice.timestamps[i - 1]);
             }
-            StartCoroutine(FadeReplaceText(activeVoice.transcriptions[i], 0.5f));
+            StartCoroutine(FadeReplaceText(activeVoice.transcriptions[i].Trim(), 0.5f));
         }
     }
 
