@@ -31,7 +31,7 @@ public class ContentUI : MonoBehaviour
         StopAllCoroutines();
         activeVoice = voice;
         text.text = "";
-        signature.text = "- " + activeVoice.signature;
+        signature.text = activeVoice.signature.Length > 0 ? "- " + activeVoice.signature : "";
 
         // Start below screen
         Vector3 newPosition = canvasTransformInitialPosition;
@@ -107,8 +107,8 @@ public class ContentUI : MonoBehaviour
         }
 
         float startingY = canvasTransform.position.y;
-        // TODO: Fix the magic -300f for iPad.
-        float targetY = easeIn ? canvasTransformInitialPosition.y : canvasTransformInitialPosition.y - canvasTransform.rect.height - 300f;
+        // TODO: Fix the magic -450f for iPad.
+        float targetY = easeIn ? canvasTransformInitialPosition.y : canvasTransformInitialPosition.y - canvasTransform.rect.height - 450f;
         for (float t = 0.0f; t < 1.0f; t += Time.deltaTime / duration)
         {
             Vector3 newPosition = canvasTransform.position;
