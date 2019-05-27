@@ -2965,6 +2965,7 @@ MonoBehaviour:
   scenePrefab: {fileID: 7854927286931720538, guid: 54b01d65646f4444da5c3f291a37f7a0,
     type: 3}
   tapToPlaceParent: {fileID: 1762771444}
+  moveDeviceUI: {fileID: 1018373458}
 --- !u!114 &1198602767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4265,6 +4266,7 @@ MonoBehaviour:
   displayStorySeed: {fileID: 1251564055}
   storySeed: {fileID: 871782102}
   tapToPlaceAnimator: {fileID: 1684882934}
+  trackerInfo: {fileID: 2098575459}
   storyState: 0
   problemText: {fileID: 1860900796}
   lookAroundText: {fileID: 2123339722}

@@ -24,6 +24,7 @@ public class TapToPlaceManager : MonoBehaviour
     public GameObject storySeed;
 
     [SerializeField] Animator tapToPlaceAnimator;
+    [SerializeField] GameObject trackerInfo; // TODO: FIX ALL THIS SHIT.
 
     public enum StoryState
     {
@@ -63,6 +64,10 @@ public class TapToPlaceManager : MonoBehaviour
         Handheld.Vibrate();
         // Play sound for AUDITORY PLEASUREZ
         dropSound.Play();
+
+        // TODO: FIX ALL THIS SHIT.
+        trackerInfo.SetActive(true);
+
         // Destroy all intro text sequences
         Destroy(problemText);
         Destroy(lookAroundText);

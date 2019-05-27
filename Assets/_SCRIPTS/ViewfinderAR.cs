@@ -9,10 +9,11 @@ public class ViewfinderAR : MonoBehaviour
     [SerializeField] float modelFadeInDuration;
     [SerializeField] GameObject scenePrefab;
     [SerializeField] GameObject tapToPlaceParent;
+    [SerializeField] GameObject moveDeviceUI; // TODO: FIX ALL THIS SHIT.
     GameObject sceneInstance;
 
-    bool AnchoringFound = false;
-    float TimeElapsed = 0f;
+    bool AnchoringFound;
+    float TimeElapsed;
     float MaxTimeAnchorSearch = 10f;
 
     void FadeInModel(Transform model)
@@ -110,7 +111,9 @@ public class ViewfinderAR : MonoBehaviour
 
     void UnityARSessionNativeInterface_ARUserAnchorAddedEvent(ARUserAnchor anchorData)
     {
+        // TODO: FIX ALL THIS SHIT.
         AnchoringFound = true;
+        moveDeviceUI.SetActive(false);
 
         Transform child = GetChildForAnchorId(anchorData.identifier);
 
@@ -188,6 +191,11 @@ public class ViewfinderAR : MonoBehaviour
 
     IEnumerator InitializeTapToPlace()
     {
+        // TODO: FIX ALL THIS SHIT.
+        UnityARSessionNativeInterface.ARUserAnchorAddedEvent -= UnityARSessionNativeInterface_ARUserAnchorAddedEvent;
+        UnityARSessionNativeInterface.ARUserAnchorUpdatedEvent -= UnityARSessionNativeInterface_ARUserAnchorUpdatedEvent;
+        UnityARSessionNativeInterface.ARUserAnchorRemovedEvent -= UnityARSessionNativeInterface_ARUserAnchorRemovedEvent;
+
         FindObjectOfType<AnchoringUI>().FadeOut();
         yield return new WaitForSeconds(1f);
         tapToPlaceParent.SetActive(true);
