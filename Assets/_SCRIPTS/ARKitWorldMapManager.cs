@@ -159,7 +159,7 @@ public class ARKitWorldMapManager : MonoBehaviour
             // Temporarily hide elements just for screenshot
             PointCloudGenerator.ToggleParticles(false);
             ScreenUI.SetActive(false);
-            SetChildrenActive(false);
+            //SetChildrenActive(false);
 
             ScreenCapture.CaptureScreenshot(ReferenceImageSaveName);
             StartCoroutine(BecauseIOSScreenshotBehaviorIsUndefined());
@@ -182,7 +182,7 @@ public class ARKitWorldMapManager : MonoBehaviour
         yield return null;
 
         ScreenUI.SetActive(true);
-        SetChildrenActive(true);
+        //SetChildrenActive(true);
         PointCloudGenerator.ToggleParticles(true);
     }
 
