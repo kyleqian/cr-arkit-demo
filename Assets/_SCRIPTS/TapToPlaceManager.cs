@@ -193,7 +193,7 @@ public class TapToPlaceManager : MonoBehaviour
                 };
         if (storyState == StoryState.BeforeFirstTap)
         {
-            Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2 - 40, 0f);
+            Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2 - Screen.height/12, 0f);
 
             touchScreenPosition = mainCamera.ScreenToViewportPoint(screenCenter);
             point = new ARPoint

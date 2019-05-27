@@ -85,7 +85,7 @@ public class SearchReticle : MonoBehaviour {
         List<ARHitTestResult> hitResults = UnityARSessionNativeInterface.GetARSessionNativeInterface ().HitTest (point, resultTypes);
         if (hitResults.Count > 0) {
             foreach (var hitResult in hitResults) {
-                foundReticle.transform.position = UnityARMatrixOps.GetPosition (hitResult.worldTransform) + new Vector3(0f, 0.05f, 0f);
+                foundReticle.transform.position = UnityARMatrixOps.GetPosition(hitResult.worldTransform); // + new Vector3(0f, 0.05f, 0f);
                 foundReticle.transform.rotation = UnityARMatrixOps.GetRotation (hitResult.worldTransform);
                 foundReticle.transform.LookAt (new Vector3 (Camera.main.transform.position.x, foundReticle.transform.position.y, Camera.main.transform.position.z));
                 Debug.Log (string.Format ("x:{0:0.######} y:{1:0.######} z:{2:0.######}", foundReticle.transform.position.x, foundReticle.transform.position.y, foundReticle.transform.position.z));
@@ -104,7 +104,7 @@ public class SearchReticle : MonoBehaviour {
             return;
         }
         //use center of screen for focusing
-        Vector3 center = new Vector3(Screen.width/2, Screen.height/2 - 40, findingReticleDist);
+        Vector3 center = new Vector3(Screen.width/2, Screen.height/2 - Screen.height/12, findingReticleDist);
 
         #if UNITY_EDITOR
         Ray ray = Camera.main.ScreenPointToRay (center);
