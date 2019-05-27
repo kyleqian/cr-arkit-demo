@@ -166,7 +166,7 @@ public class ARKitWorldMapManager : MonoBehaviour
 
             Debug.LogFormat("ARWorldMap saved to {0}", GlobalMapManager.Instance.WorldMapPath);
             
-            GlobalMapManager.Instance.UploadMap();
+            //GlobalMapManager.Instance.UploadMap();
         }
 #endif
     }

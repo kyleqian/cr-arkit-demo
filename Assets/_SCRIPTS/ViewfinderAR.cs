@@ -147,21 +147,35 @@ public class ViewfinderAR : MonoBehaviour
     void LoadWorldMap()
     {
         Debug.Log("Attempting to load ARWorldMap.");
-        GlobalMapManager.Instance.DownloadLatestMap(() =>
+
+        //GlobalMapManager.Instance.DownloadLatestMap(() =>
+        //{
+        //    var worldMap = ARWorldMap.Load(GlobalMapManager.Instance.WorldMapPath);
+        //    if (worldMap != null)
+        //    {
+        //        Debug.LogFormat("Map loaded. Center: {0} Extent: {1}", worldMap.center, worldMap.extent);
+
+        //        var config = ARKitManager.Instance.DefaultSessionConfiguration;
+        //        config.worldMap = worldMap;
+        //        UnityARSessionRunOption runOption = UnityARSessionRunOption.ARSessionRunOptionRemoveExistingAnchors | UnityARSessionRunOption.ARSessionRunOptionResetTracking;
+
+        //        Debug.Log("Restarting session with worldMap");
+        //        ARKitManager.Instance.Session.RunWithConfigAndOptions(config, runOption);
+        //    }
+        //});
+
+        var worldMap = ARWorldMap.Load(GlobalMapManager.Instance.WorldMapPath);
+        if (worldMap != null)
         {
-            var worldMap = ARWorldMap.Load(GlobalMapManager.Instance.WorldMapPath);
-            if (worldMap != null)
-            {
-                Debug.LogFormat("Map loaded. Center: {0} Extent: {1}", worldMap.center, worldMap.extent);
+            Debug.LogFormat("Map loaded. Center: {0} Extent: {1}", worldMap.center, worldMap.extent);
 
-                var config = ARKitManager.Instance.DefaultSessionConfiguration;
-                config.worldMap = worldMap;
-                UnityARSessionRunOption runOption = UnityARSessionRunOption.ARSessionRunOptionRemoveExistingAnchors | UnityARSessionRunOption.ARSessionRunOptionResetTracking;
+            var config = ARKitManager.Instance.DefaultSessionConfiguration;
+            config.worldMap = worldMap;
+            UnityARSessionRunOption runOption = UnityARSessionRunOption.ARSessionRunOptionRemoveExistingAnchors | UnityARSessionRunOption.ARSessionRunOptionResetTracking;
 
-                Debug.Log("Restarting session with worldMap");
-                ARKitManager.Instance.Session.RunWithConfigAndOptions(config, runOption);
-            }
-        });
+            Debug.Log("Restarting session with worldMap");
+            ARKitManager.Instance.Session.RunWithConfigAndOptions(config, runOption);
+        }
     }
 
     void SetChildrenActive(bool active)
