@@ -7,5 +7,4 @@ public class SceneSwitcher : MonoBehaviour
     {
         SceneManager.LoadSceneAsync(sceneName);
     }
-
 }

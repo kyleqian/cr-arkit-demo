@@ -7,4 +7,9 @@ public class Title : MonoBehaviour
     {
         SceneManager.LoadScene("Intro", LoadSceneMode.Single);
     }
+
+    public void LoadResources()
+    {
+        SceneManager.LoadScene("Resources", LoadSceneMode.Single);
+    }
 }
