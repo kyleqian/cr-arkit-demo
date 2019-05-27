@@ -154,7 +154,7 @@ public class ARKitWorldMapManager : MonoBehaviour
 #else
         if (worldMap != null)
         {
-            worldMap.Save(WorldMapSavePath);
+            worldMap.Save(GlobalMapManager.Instance.WorldMapPath);
 
             // Temporarily hide elements just for screenshot
             PointCloudGenerator.ToggleParticles(false);
@@ -164,7 +164,7 @@ public class ARKitWorldMapManager : MonoBehaviour
             ScreenCapture.CaptureScreenshot(ReferenceImageSaveName);
             StartCoroutine(BecauseIOSScreenshotBehaviorIsUndefined());
 
-            Debug.LogFormat("ARWorldMap saved to {0}", WorldMapSavePath);
+            Debug.LogFormat("ARWorldMap saved to {0}", GlobalMapManager.Instance.WorldMapPath);
             
             GlobalMapManager.Instance.UploadMap();
         }
@@ -192,8 +192,8 @@ public class ARKitWorldMapManager : MonoBehaviour
         referenceImage.GetComponent<Image>().sprite = UtilitiesCR.LoadNewSprite(ReferenceImageSavePath);
         referenceImage.SetActive(true);
 #else
-        Debug.LogFormat("Loading ARWorldMap {0}", WorldMapSavePath);
-        var worldMap = ARWorldMap.Load(WorldMapSavePath);
+        Debug.LogFormat("Loading ARWorldMap {0}", GlobalMapManager.Instance.WorldMapPath);
+        var worldMap = ARWorldMap.Load(GlobalMapManager.Instance.WorldMapPath);
         if (worldMap != null)
         {
             Debug.LogFormat("Map loaded. Center: {0} Extent: {1}", worldMap.center, worldMap.extent);

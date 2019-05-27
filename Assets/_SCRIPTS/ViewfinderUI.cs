@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR.iOS;
 
@@ -40,7 +42,7 @@ public class ViewfinderUI : MonoBehaviour
 
     void DetectLetterTouch()
     {
-        if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began)
+        if (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Began && !IsPointerOverUIObject())
         {
             Ray raycast = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
             if (Physics.Raycast(raycast, out RaycastHit raycastHit))
@@ -63,5 +65,14 @@ public class ViewfinderUI : MonoBehaviour
                 }
             }
         }
+    }
+
+    bool IsPointerOverUIObject()
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        return results.Count > 0;
     }
 }
