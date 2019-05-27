@@ -23,7 +23,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1081789551719286149}
-  m_LocalRotation: {x: -0, y: 0.124233305, z: -0, w: 0.99225307}
+  m_LocalRotation: {x: 0, y: 0.1242336, z: 0, w: 0.992253}
   m_LocalPosition: {x: -0.657, y: -0.007, z: 0.087582275}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -46,7 +46,7 @@ GameObject:
   - component: {fileID: 8340151306543982506}
   m_Layer: 0
   m_Name: Cube.001 (1)
-  m_TagString: LetterFlashlight
+  m_TagString: LetterPaper
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 2558270820821113643}
   m_Layer: 0
   m_Name: Daily
-  m_TagString: Untagged
+  m_TagString: LetterPaper
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -57,10 +57,31 @@ public class ViewfinderUI : MonoBehaviour
                         contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("AK"));
                         break;
                     case "LetterFlower":
-                        contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("MS"));
+                        contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("JR"));
                         break;
                     case "LetterPlaque":
+                        contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("ED1"));
+                        break;
+                    case "LetterPlaqueBig":
+                        contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("ED2"));
+                        break;
+                    case "LetterMegaphone":
+                        contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("SP"));
+                        break;
+                    case "LetterKA":
+                        contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("NH"));
+                        break;
+                    case "LetterGavel1":
                         contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("JT"));
+                        break;
+                    case "LetterGavel2":
+                        contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("SK"));
+                        break;
+                    case "LetterCereal":
+                        contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("MS"));
+                        break;
+                    case "LetterPaper":
+                        contentUI.ShowSelf(GlobalDatabase.Instance.FindVoiceByName("WTSD"));
                         break;
                 }
             }

@@ -9,6 +9,12 @@ TagManager:
   - LetterFlashlight
   - LetterFlower
   - LetterPlaqueBig
+  - LetterGavel1
+  - LetterGavel2
+  - LetterCereal
+  - LetterKA
+  - LetterMegaphone
+  - LetterPaper
   layers:
   - Default
   - TransparentFX

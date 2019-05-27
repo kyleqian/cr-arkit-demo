@@ -43,9 +43,10 @@ GameObject:
   - component: {fileID: 1070030888456016000}
   - component: {fileID: 1070030888456786080}
   - component: {fileID: 1070030888457785952}
+  - component: {fileID: 9196676159359098003}
   m_Layer: 0
   m_Name: bowl_A
-  m_TagString: Untagged
+  m_TagString: LetterCereal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -109,6 +110,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &9196676159359098003
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1070030888455785632}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.17289877, y: 0.17303911, z: 0.08986122}
+  m_Center: {x: 0.0001401566, y: 0, z: 0.000024253508}
 --- !u!1 &1070030888455785634
 GameObject:
   m_ObjectHideFlags: 0
@@ -2260,7 +2274,7 @@ GameObject:
   - component: {fileID: 1413711505401368301}
   m_Layer: 0
   m_Name: Cube.001 (2)
-  m_TagString: LetterFlashlight
+  m_TagString: LetterCereal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
