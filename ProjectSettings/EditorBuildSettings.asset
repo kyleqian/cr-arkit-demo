@@ -13,7 +13,7 @@ EditorBuildSettings:
     guid: 4292467a6a37b4c5b99f70c13fd7655a
   - enabled: 1
     path: Assets/_SCENES/Intro.unity
-    guid: 9c61b944b957e45cb94263cd9da4242d
+    guid: 5c75730af0e6742e199e80ae78d60f7b
   - enabled: 1
     path: Assets/_SCENES/Viewfinder.unity
     guid: d383581eafcce4f23a6a62f11b630e56
