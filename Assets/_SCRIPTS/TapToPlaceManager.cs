@@ -187,15 +187,15 @@ public class TapToPlaceManager : MonoBehaviour
                     ARHitTestResultType.ARHitTestResultTypeEstimatedHorizontalPlane,
                     ARHitTestResultType.ARHitTestResultTypeFeaturePoint
                 };
-        //if (storyState == StoryState.BeforeFirstTap)
-        //{
-        //    touchScreenPosition = mainCamera.ScreenToViewportPoint(screenCenter);
-        //    point = new ARPoint
-        //    {
-        //        x = touchScreenPosition.x,
-        //        y = touchScreenPosition.y
-        //    };
-        //}
+        if (storyState == StoryState.BeforeFirstTap)
+        {
+            touchScreenPosition = mainCamera.ScreenToViewportPoint(screenCenter);
+            point = new ARPoint
+            {
+                x = touchScreenPosition.x,
+                y = touchScreenPosition.y
+            };
+        }
 
         foreach (ARHitTestResultType resultType in resultTypes)
         {
