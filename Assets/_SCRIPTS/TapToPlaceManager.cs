@@ -177,7 +177,6 @@ public class TapToPlaceManager : MonoBehaviour
     // iOS - ARKit related functions
     private void ARKitProcessHit(Vector3 touchScreenPosition)
     {
-        Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, 0f);
         // Using iOS - ARKit
         ARPoint point = new ARPoint
         {
@@ -194,6 +193,8 @@ public class TapToPlaceManager : MonoBehaviour
                 };
         if (storyState == StoryState.BeforeFirstTap)
         {
+            Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2 - 40, 0f);
+
             touchScreenPosition = mainCamera.ScreenToViewportPoint(screenCenter);
             point = new ARPoint
             {

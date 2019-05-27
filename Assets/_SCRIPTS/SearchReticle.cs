@@ -104,7 +104,7 @@ public class SearchReticle : MonoBehaviour {
             return;
         }
         //use center of screen for focusing
-        Vector3 center = new Vector3(Screen.width/2, Screen.height/2, findingReticleDist);
+        Vector3 center = new Vector3(Screen.width/2, Screen.height/2 - 40, findingReticleDist);
 
         #if UNITY_EDITOR
         Ray ray = Camera.main.ScreenPointToRay (center);
