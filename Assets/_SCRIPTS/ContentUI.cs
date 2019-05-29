@@ -123,17 +123,6 @@ public class ContentUI : MonoBehaviour
         }
     }
 
-    IEnumerator OnAudioFinished(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-
-        // Remember that the user has completed this Voice
-        PlayerPrefs.SetInt(activeVoice.GetPlayerPrefKey(), 1);
-        GlobalDatabase.Instance.DatabaseUpdated.Invoke();
-
-        HideSelf();
-    }
-
     IEnumerator PlayAudioAndTranscription()
     {
         audioSource.clip = activeVoice.recording;
@@ -142,7 +131,8 @@ public class ContentUI : MonoBehaviour
 
         audioSource.Play();
         StartCoroutine(PlayTranscription());
-        StartCoroutine(OnAudioFinished(audioSource.clip.length + 1f));
+        StartCoroutine(MarkVoiceAsListened(audioSource.clip.length));
+        StartCoroutine(OnAudioFinished(audioSource.clip.length));
     }
 
     IEnumerator PlayTranscription()
@@ -155,6 +145,20 @@ public class ContentUI : MonoBehaviour
             }
             StartCoroutine(FadeReplaceText(activeVoice.transcriptions[i].Trim(), 0.5f));
         }
+    }
+
+    // Remember that the user has completed this Voice.
+    IEnumerator MarkVoiceAsListened(float clipLength)
+    {
+        yield return new WaitForSeconds(clipLength * 0.9f);
+        PlayerPrefs.SetInt(activeVoice.GetPlayerPrefKey(), 1);
+        GlobalDatabase.Instance.DatabaseUpdated.Invoke();
+    }
+
+    IEnumerator OnAudioFinished(float clipLength)
+    {
+        yield return new WaitForSeconds(clipLength + 1f);
+        HideSelf();
     }
 
     IEnumerator FadeReplaceText(string newText, float speed)
