@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: NH
   m_EditorClassIdentifier: 
   signature: Noah Hornik, Kappa Alpha Brother, '19
-  recording: {fileID: 8300000, guid: c764bd5e773d14a78b5ad044fed17ad4, type: 3}
+  recording: {fileID: 8300000, guid: 1a82451d32ca241b2b14f3966f2415f2, type: 3}
   timestamps:
   - 0
   - 9

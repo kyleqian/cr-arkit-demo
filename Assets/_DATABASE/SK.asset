@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SK
   m_EditorClassIdentifier: 
   signature: Shanta Katipamula, ASSU Exec '19
-  recording: {fileID: 8300000, guid: 07d01f31d2e9e48fe8e69d565cb2b13b, type: 3}
+  recording: {fileID: 8300000, guid: c1a77c19cef294d51a9d8604f7ccf710, type: 3}
   timestamps:
   - 0
   - 9

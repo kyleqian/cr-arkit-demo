@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SP
   m_EditorClassIdentifier: 
   signature: Stephanie Pham, Co-founder of ASAP, '18
-  recording: {fileID: 8300000, guid: 9a34cec1ea3f9446ba0923281d51f279, type: 3}
+  recording: {fileID: 8300000, guid: 06b645fb970614016903c885ba6ad0e7, type: 3}
   timestamps:
   - 0
   - 7
