@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ED1
   m_EditorClassIdentifier: 
   signature: 
-  recording: {fileID: 8300000, guid: 66b28fb1f169d49d2b0192c188ce92fd, type: 3}
+  recording: {fileID: 8300000, guid: 0a4800d1f0c39437a93480da57c3b42f, type: 3}
   timestamps:
   - 0
   - 15

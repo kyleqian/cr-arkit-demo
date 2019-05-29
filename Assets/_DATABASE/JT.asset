@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: JT
   m_EditorClassIdentifier: 
   signature: Justice Tention, ASSU Exec '18
-  recording: {fileID: 8300000, guid: 8ebf90c32710a4d91ac26b43804790b7, type: 3}
+  recording: {fileID: 8300000, guid: 37e7c00ae01b64064a9c2f6db1901080, type: 3}
   timestamps:
   - 0
   - 7
@@ -34,10 +34,10 @@ MonoBehaviour:
     around this incident. '
   - 'My perspective on ASSU was that the obligation that we have is to make sure that
     we express the voices in rooms that aren''t otherwise being heard. '
-  - 'This event embodied that exactly. It was about survivors; survivors are often...
-    their voices go unheard. '
-  - 'A survivor was promised a platform for her voice to be heard, and then that was
-    snatchedr in almost a last-minute fashion.  '
+  - '[The rally in 2018 organized by ASAP] embodied that exactly. It was about survivors;
+    survivors are often... their voices go unheard.'
+  - A survivor was promised a platform for her voice to be heard, and then that was
+    snatched in almost a last-minute fashion.
   - 'So when the rally took place, the statements that were requested by Emily Doe
     were not yet public. The question then was not around the content of the plaques.  '
   - 'It is solely about the agency of Emily Doe which I think is another important

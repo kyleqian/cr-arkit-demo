@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: WTSD
   m_EditorClassIdentifier: 
   signature: Writer for The Stanford Daily, '19
-  recording: {fileID: 8300000, guid: a1e38e5d69a154448849e2ea8ca6acfe, type: 3}
+  recording: {fileID: 8300000, guid: d71a04fc5d6fd4e1dbabc1cef856e6be, type: 3}
   timestamps:
   - 0
   - 20
