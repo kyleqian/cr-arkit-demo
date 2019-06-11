@@ -15,6 +15,7 @@ public class ViewfinderAR : MonoBehaviour
     bool AnchoringFound;
     float TimeElapsed;
     float MaxTimeAnchorSearch = 10f;
+    bool TimeRunning;
 
     void FadeInModel(Transform model)
     {
@@ -223,12 +224,20 @@ public class ViewfinderAR : MonoBehaviour
         {
             TimeElapsed = MaxTimeAnchorSearch;
             // Start tap to place here
-            StartCoroutine(InitializeTapToPlace()); 
+            if (!AnchoringFound)
+            {
+                StartCoroutine(InitializeTapToPlace());
+            }
         }
-        else if (TimeElapsed < MaxTimeAnchorSearch)
+        else if (TimeElapsed < MaxTimeAnchorSearch && TimeRunning)
         {
             TimeElapsed += Time.deltaTime;
         }
+    }
+
+    public void SetTimeRunning(bool isRunning)
+    {
+        TimeRunning = isRunning;
     }
 
     void OnDestroy()

@@ -38,4 +38,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_SANDBOX/Sandbox.unity
     guid: e5a5c61630bcc4030afdfaf09d1a80b4
+  - enabled: 1
+    path: Assets/_SCENES/TEST_TITLE_SCAN.unity
+    guid: 1f54462f747d3404c840a60bfa970c6e
+  - enabled: 1
+    path: Assets/_SCENES/TEST_SCAN_INTRO.unity
+    guid: f18afc31f7d1e471f9d3b5149101e2f0
   m_configObjects: {}

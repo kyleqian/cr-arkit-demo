@@ -22,6 +22,11 @@ public class Intro : MonoBehaviour
         textChangeCoroutine = StartCoroutine(FadeReplaceText(introText[0], textFadeDuration));
     }
 
+    public void TurnoffIntro()
+    {
+        gameObject.SetActive(false);
+    }
+
     public void AdvanceText()
     {
         if (textChangeCoroutine != null)

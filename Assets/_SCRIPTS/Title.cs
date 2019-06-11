@@ -10,6 +10,11 @@ public class Title : MonoBehaviour
         SceneManager.LoadScene("Intro", LoadSceneMode.Single);
     }
 
+    public void LoadScene(string name)
+    {
+        SceneManager.LoadScene(name, LoadSceneMode.Single);
+    }
+
     public void LoadResources()
     {
         SceneManager.LoadScene("Resources", LoadSceneMode.Single);
